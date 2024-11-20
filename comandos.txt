@@ -1,0 +1,20 @@
+CRUD
+-ARQUITETURA MVC
+-JAVAFX
+-SQL SERVER
+-EXCEPTION SQL
+
+java -cp "bin;lib/*;C:\javafx-sdk-XX\lib\*" --module-path "C:\javafx-sdk-XX\lib" --add-modules javafx.controls Calculadora
+java -cp "bin;lib/*"  Calculadora
+
+
+java -cp .\bin --module-path "C:\javafx-sdk-23\lib" --add-modules javafx.controls Calculadora
+java -cp .\bin --module-path "C:\javafx-sdk-23\lib" Calculadora
+
+
+
+
+Sistema Comanda
+
+javac -cp ".\lib\*" -d .\bin .\src\*.java && java -cp ".\lib;.\bin" --module-path "C:\javafx-sdk-23\lib" --add-modules javafx.controls Main
+

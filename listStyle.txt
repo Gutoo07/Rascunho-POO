@@ -1,0 +1,29 @@
+button.setStyle("-fx-background-color: #4CAF50;");       // Cor de fundo
+button.setStyle("-fx-text-fill: white;");                // Cor do texto
+button.setStyle("-fx-border-color: black;");             // Cor da borda
+button.setStyle("-fx-border-width: 2px;");               // Largura da borda
+button.setStyle("-fx-border-radius: 5px;");              // Raio de arredondamento da borda
+button.setStyle("-fx-padding: 10px;");                    // Preenchimento interno
+button.setStyle("-fx-margin: 5px;");                     // Margem externa
+button.setStyle("-fx-font-size: 15px;");                 // Tamanho da fonte
+button.setStyle("-fx-font-family: Arial;");              // Família da fonte
+button.setStyle("-fx-font-weight: bold;");               // Peso da fonte
+button.setStyle("-fx-font-style: italic;");              // Estilo da fonte
+button.setStyle("-fx-text-alignment: center;");          // Alinhamento do texto
+button.setStyle("-fx-alignment: center;");               // Alinhamento do conteúdo (ex. para VBox, HBox)
+button.setStyle("-fx-base: #2E8B57;");                   // Cor base para alguns componentes (ex. Botões)
+button.setStyle("-fx-background-insets: 0, 1;");         // Definir os recuos do fundo
+button.setStyle("-fx-background-radius: 10px;");         // Raio de arredondamento do fundo
+button.setStyle("-fx-opacity: 0.8;");                    // Opacidade
+button.setStyle("-fx-effect: dropshadow(gaussian, black, 10, 0, 1, 1);"); // Efeito de sombra
+button.setStyle("-fx-text-box-border: #aaa;");           // Cor da borda da caixa de texto
+button.setStyle("-fx-control-inner-background: #f0f0f0;");  // Cor do fundo interno de controles
+button.setStyle("-fx-line-spacing: 5px;");                // Espaçamento entre linhas do texto
+button.setStyle("-fx-wrap-text: true;");                 // Permitir quebra de linha no texto
+button.setStyle("-fx-background-image: url('image.png');"); // Imagem de fundo
+button.setStyle("-fx-background-position: center center;"); // Posição da imagem de fundo
+button.setStyle("-fx-background-size: cover;");           // Tamanho da imagem de fundo
+button.setStyle("-fx-border-style: solid;");              // Estilo da borda (sólida, pontilhada, etc.)
+button.setStyle("-fx-border-width: 3px;");               // Largura da borda
+button.setStyle("-fx-border-radius: 8px;");              // Raio de borda
+button.setStyle("-fx-background-color: linear-gradient(to bottom, #FFB6C1, #FF1493);"); // Gradiente
