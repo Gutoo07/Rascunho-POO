@@ -1,0 +1,6 @@
+javac -cp ".\lib\*" -d .\bin .\src\*.java && java -cp ".\lib;.\bin" --module-path "C:\javafx-sdk-23\lib" --add-modules javafx.controls Main
+
+
+ali no --module-path coloca o caminho da sua maquina
+
+e na pasta lib joga o .jar do sql e todos arquivo do /lib do javafx
