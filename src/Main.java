@@ -18,7 +18,7 @@ public class Main extends Application {
     public static final int H = 500;
     public static final int W = 900;
     public static Map<String,Scene> mapScene = new HashMap(); 
-    public static String pageSelected = "COMANDA";
+    public static String pageSelected = "INICIO";
     
     //map das telas scenes
     //tem que ter um em cada tela, e as tela vai ser divida por aqui java
@@ -31,9 +31,7 @@ public class Main extends Application {
         stage = primaryStage;
 
         stage.setTitle("Sistema Comanda | Bar do Bolivia");
-        stage.setScene(mapScene.get("COMANDA"));
-        stage.show();
-
+        changeTela(mapScene.get("INICIO"));
     }
 
     public void alert(){
@@ -42,6 +40,8 @@ public class Main extends Application {
 
     public static void changeTela(Scene scene){
         stage.setScene(scene);
+        stage.setWidth(stage.getWidth());
+        stage.setHeight(stage.getHeight());
         stage.show();
     }
 
