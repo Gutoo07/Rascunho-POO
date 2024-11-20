@@ -50,7 +50,7 @@ public class Main extends Application {
         System.out.println("UPDATE");
         mapScene.clear();
         new Home();
-        new Comanda();
+        new TelaComanda();
     }
 
 
