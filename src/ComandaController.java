@@ -26,17 +26,17 @@ public class ComandaController {
         }
         Comanda c = new Comanda(comandaId);
         lista.add(c);
-        comandaDAO.inserir(c);
+        comandaDAO.inserirComanda(c);
     }
     public void excluir(Comanda c) throws ComandaException {
         if (c.getValorPago() >= c.getValorTotal()) {
             lista.remove(c);
-            comandaDAO.excluir(c);
+            comandaDAO.excluirComanda(c);
         }
     }
     public void refresh() throws ComandaException {
         lista.clear();
-        lista.addAll(comandaDAO.refresh());
+        lista.addAll(comandaDAO.refreshComandas());
     }
 
     public void limpar() {

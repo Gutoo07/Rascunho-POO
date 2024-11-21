@@ -31,7 +31,7 @@ public class ComandaDAOimp implements ComandaDAO {
     }
 
     @Override
-    public void inserir(Comanda c) throws ComandaException {
+    public void inserirComanda(Comanda c) throws ComandaException {
         try {
             String SQL = """
                     INSERT INTO comanda (id) VALUES
@@ -45,9 +45,83 @@ public class ComandaDAOimp implements ComandaDAO {
             throw new ComandaException(e);
         }
     }
-
     @Override
-    public void excluir(Comanda c) throws ComandaException {
+    public void inserirCliente(Cliente c) throws ComandaException {
+        try {
+            String SQL = """
+                    INSERT INTO cliente VALUES
+                    (?, ?, ?, ?)
+                    """;
+            PreparedStatement stm = con.prepareStatement(SQL);
+            stm.setInt(1, c.getId());
+            stm.setString(2, c.getNome());
+            stm.setString(3, c.getTelefone());
+            stm.setString(4, c.getCpf());
+            int i = stm.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ComandaException(e);
+        }
+    }
+    @Override
+    public void inserirProduto(Produto p) throws ComandaException {
+        try {
+            String SQL = """
+                    INSERT INTO produto VALUES
+                    (?, ?, ?)
+                    """;
+            PreparedStatement stm = con.prepareStatement(SQL);
+            stm.setInt(1, p.getId());
+            stm.setString(2, p.getNome());
+            stm.setDouble(3, p.getValor());
+            int i = stm.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ComandaException(e);
+        }
+    }    
+    @Override
+    public void atualizarCliente(Cliente c) throws ComandaException {
+        try {
+            String SQL = """
+                    UPDATE cliente
+                    SET nome = ?,
+                        telefone = ?,
+                         cpf= ?
+                    WHERE id = ?
+                    """;
+            PreparedStatement stm = con.prepareStatement(SQL);
+            stm.setString(1, c.getNome());
+            stm.setString(2, c.getTelefone());
+            stm.setString(3, c.getCpf());
+            stm.setInt(4, c.getId());
+            int i = stm.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ComandaException(e);
+        }
+    }    
+    @Override
+    public void atualizarProduto(Produto p) throws ComandaException {
+        try {
+            String SQL = """
+                    UPDATE produto
+                    SET nome = ?,
+                        valor = ?
+                    WHERE id = ?
+                    """;
+            PreparedStatement stm = con.prepareStatement(SQL);
+            stm.setString(1, p.getNome());
+            stm.setDouble(2, p.getValor());
+            stm.setInt(3, p.getId());
+            int i = stm.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ComandaException(e);
+        }
+    }      
+    @Override
+    public void excluirComanda(Comanda c) throws ComandaException {
         try {
             String SQL = """
                     DELETE FROM comanda
@@ -61,20 +135,38 @@ public class ComandaDAOimp implements ComandaDAO {
             throw new ComandaException(e);
         }
     }
-    // @Override
-    // public void pesquisarPorId(int id) {
-    //     List<Comanda> lista = new ArrayList<>();
-    //     try {
-    //         String SQL = """
-    //                 SELECT *
-    //                 FROM comanda c
-    //                 INNER JOIN 
-                    
-    //                 """;
-    //     }
-    // }
     @Override
-    public List<Comanda> refresh() throws ComandaException {
+    public void excluirCliente(Cliente c) throws ComandaException {
+        try {
+            String SQL = """
+                    DELETE FROM cliente
+                    WHERE id = ?
+                    """;
+            PreparedStatement stm = con.prepareStatement(SQL);
+            stm.setInt(1, c.getId());
+            int i = stm.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ComandaException(e);
+        }
+    }    
+    @Override
+    public void excluirProduto(Produto p) throws ComandaException {
+        try {
+            String SQL = """
+                    DELETE FROM produto
+                    WHERE id = ?
+                    """;
+            PreparedStatement stm = con.prepareStatement(SQL);
+            stm.setInt(1, p.getId());
+            int i = stm.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ComandaException(e);
+        }
+    }   
+    @Override
+    public List<Comanda> refreshComandas() throws ComandaException {
         List<Comanda> lista = new ArrayList<>();
         try {
             String SQL = """
@@ -89,6 +181,93 @@ public class ComandaDAOimp implements ComandaDAO {
                 c.setValorPago(rs.getDouble("valorPago"));
                 c.setClienteId(rs.getInt("clienteId"));
                 lista.add(c);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ComandaException(e);
+        }
+        return lista;
+    }
+    @Override
+    public List<Cliente> refreshClientes() throws ComandaException {
+        List<Cliente> lista = new ArrayList<>();
+        try {
+            String SQL = """
+                    SELECT * FROM cliente
+                    """;
+            PreparedStatement stm = con.prepareStatement(SQL);
+            ResultSet rs = stm.executeQuery();
+            while(rs.next()) {
+                Cliente c = new Cliente(rs.getInt("id"));
+                c.setNome(rs.getString("nome"));
+                c.setTelefone(rs.getString("telefone"));
+                c.setCpf(rs.getString("cpf"));
+                lista.add(c);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ComandaException(e);
+        }
+        return lista;
+    }    
+    public List<Produto> refreshProdutos() throws ComandaException {
+        List<Produto> lista = new ArrayList<>();
+        try {
+            String SQL = """
+                    SELECT * FROM produto
+                    """;
+            PreparedStatement stm = con.prepareStatement(SQL);
+            ResultSet rs = stm.executeQuery();
+            while(rs.next()) {
+                Produto p = new Produto(rs.getInt("id"));
+                p.setNome(rs.getString("nome"));
+                p.setValor(rs.getDouble("valor"));
+                lista.add(p);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ComandaException(e);
+        }
+        return lista;
+    }
+    @Override
+    public List<Cliente> pesquisarClienteNome(String nome) throws ComandaException {
+        List<Cliente> lista = new ArrayList<>();
+        try {
+            String SQL = """
+                    SELECT * FROM cliente WHERE nome LIKE ?
+                    """;
+            PreparedStatement stm = con.prepareStatement(SQL);
+            stm.setString(1, "%" + nome + "%");
+            ResultSet rs = stm.executeQuery();
+            while(rs.next()) {
+                Cliente c = new Cliente(rs.getInt("id"));
+                c.setNome(rs.getString("nome"));
+                c.setTelefone(rs.getString("telefone"));
+                c.setCpf(rs.getString("cpf"));
+                lista.add(c);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ComandaException(e);
+        }
+        return lista;
+    }
+    @Override
+    public List<Produto> pesquisarProdutoNome(String nome) throws ComandaException {
+        List<Produto> lista = new ArrayList<>();
+        try {
+            String SQL = """
+                    SELECT * FROM produto WHERE NOME LIKE ?
+                    """;
+            PreparedStatement stm = con.prepareStatement(SQL);
+            stm.setString(1, "%" + nome + "%");
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Produto p = new Produto(rs.getInt("id"));
+                p.setNome(rs.getString("nome"));
+                p.setValor(rs.getDouble("valor"));
+                lista.add(p);
             }
         } catch (SQLException e) {
             e.printStackTrace();

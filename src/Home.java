@@ -37,7 +37,6 @@ public class Home{
         // layout.getChildren().addAll(header,label); movido pra baixo apenas
         Scene scene = new Scene(layout, Main.W, Main.H);
 
-
         //Gridpane com o TextField (input) de numero de comanda
         GridPane inputComanda = new GridPane();
         inputComanda.setHgap(10);

@@ -5,6 +5,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
 public class TelaComanda{
+    TextField txtNomeCliente = new TextField("");
+    TextField txtTelefoneCliente = new TextField("");
     
     public TelaComanda(){
         Header header = new Header();
@@ -13,8 +15,6 @@ public class TelaComanda{
         // Label label = new Label("TELA COMANDA");
         // layout.getChildren().addAll(header,label);
         Scene scene = new Scene(layout, Main.W, Main.H);
-
-        
 
         layout.getChildren().addAll(header);
         Main.mapScene.put("COMANDA", scene);

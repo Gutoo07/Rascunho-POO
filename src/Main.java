@@ -51,6 +51,8 @@ public class Main extends Application {
         mapScene.clear();
         new Home();
         new TelaComanda();
+        new TelaCliente();
+        new TelaProduto();
     }
 
 
