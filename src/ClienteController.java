@@ -50,6 +50,20 @@ public class ClienteController {
         lista.clear();
         lista.addAll(comandaDAO.refreshClientes());
     }
+
+    public boolean cpfExist(String value){
+        if(value == null){
+            return false;
+        }
+        value = value.replaceAll(" ", "");
+        for (Cliente c : lista) {
+            if(c.getCpf().replaceAll(" ", "").equals(value)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void excluir(Cliente c) throws ComandaException {
         lista.remove(c);
         comandaDAO.excluirCliente(c);

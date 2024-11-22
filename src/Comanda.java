@@ -1,15 +1,26 @@
 public class Comanda {
     private int id;
+    private String nome;
     private double valorTotal = 0.0;
     private double valorPago = 0.0;
     private int clienteId;
+
 
     public Comanda(int id) {
         this.id = id;
     }
 
+    public Comanda(int id,String nome, int clientId) {
+        this.id = id;
+        this.nome = nome;
+        this.clienteId = clientId;
+    }
+
     public void setId(int id) {
         this.id = id;
+    }
+    public String getNome(){
+        return this.nome;
     }
     public int getId() {
         return this.id;

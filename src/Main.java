@@ -46,7 +46,7 @@ public class Main extends Application {
     }
 
     //Deus me perdoe por essa gambiarra horrivel
-    public static void updateComponent(){
+    public static void updateComponent() throws ComandaException{
         System.out.println("UPDATE");
         mapScene.clear();
         new Home();
@@ -57,7 +57,7 @@ public class Main extends Application {
 
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ComandaException {
         updateComponent();
         launch(args);
     }

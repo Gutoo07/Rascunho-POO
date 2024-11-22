@@ -1,6 +1,17 @@
-javac -cp ".\lib\*" -d .\bin .\src\*.java && java -cp ".\lib;.\bin" --module-path "C:\javafx-sdk-23\lib" --add-modules javafx.controls Main
+javac -cp ".\lib\jtds-1.3.1.jar;.\lib\*" -d .\bin .\src\*.java && java -cp ".\lib;.\lib\jtds-1.3.1.jar;.\bin" --module-path "C:\javafx-sdk-23\lib" --add-modules javafx.controls Main
 
 
 ali no --module-path coloca o caminho da sua maquina
 
 e na pasta lib joga o .jar do sql e todos arquivo do /lib do javafx
+
+.;./bin;./lib/jtds-1.3.1.jar
+
+
+javac -cp "./lib/jtds-1.3.1.jar;/lib/*" -d .\bin .\src\*.java && java -cp "./lib/jtds-1.3.1.jar;/lib/*;./bin" --module-path "C:\javafx-sdk-23\lib" --add-modules javafx.controls Main
+
+
+Bindings.bindBidirectional(txtCpfCliente.textProperty(), control.nomeProperty(), new StringConverter<String>())
+
+
+javac -cp ".\lib\*" -d .\bin .\src\*.java && java -cp ".\lib;.\bin" --module-path "C:\javafx-sdk-23\lib" --add-modules javafx.controls Main

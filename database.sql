@@ -5,6 +5,23 @@
 --drop table cliente
 --drop table produto
 
+SELECT *
+FROM [dbo].[cliente]
+
+SELECT *
+FROM [dbo].comanda
+
+SELECT *
+FROM [dbo].comanda_produto
+
+SELECT *
+FROM [dbo].produto
+
+
+
+
+
+--------------------------------------
 CREATE DATABASE trabalhobd
 GO
 --------------------------------------------------------------------

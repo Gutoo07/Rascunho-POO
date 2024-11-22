@@ -1,5 +1,6 @@
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -21,6 +22,7 @@ import javafx.util.converter.IntegerStringConverter;
 public class Home{
     private TableView<Comanda> comandas = new TableView<>();
     private TextField txtIdComanda = new TextField();
+    private TextField txtCpfCliente = new TextField();
     private ComandaController control;
 
     public Home(){
@@ -45,16 +47,24 @@ public class Home{
         Button btnAdd = new Button("Abrir Comanda");
         btnAdd.setOnAction( e -> {
          try {
-             control.adicionar();
-             comandas.refresh();
+            ClienteController cliente = new ClienteController();
+            cliente.refresh();
+            if(!cliente.cpfExist(txtCpfCliente.getText())){
+                alert(AlertType.ERROR, "Cliente não existe!");
+            }else{
+                control.adicionar();
+                comandas.refresh();
+            }
          } catch (ComandaException erro) {
              alert(AlertType.ERROR, "Erro ao adicionar/abrir comanda");
          }
         });
         inputComanda.add(new Label("Abrir ou Criar Comanda"),0,0);
         inputComanda.add(new Label("Numero de Comanda"), 0, 1);
+        inputComanda.add(new Label("CPF do Cliente"), 0, 2);
         inputComanda.add(txtIdComanda, 1, 1);
-        inputComanda.add(btnAdd, 0, 2);
+        inputComanda.add(txtCpfCliente, 1, 2);
+        inputComanda.add(btnAdd, 0, 3);
 
         //Borderpane principal contendo o Gridpane e a TableView de comandas
         BorderPane paneGeral = new BorderPane();
@@ -68,6 +78,10 @@ public class Home{
         Main.mapScene.put("INICIO", scene);
     }
     public void gerarColunas() {
+
+        TableColumn<Comanda, String> col = new TableColumn<>("Nome");
+        col.setCellValueFactory(new PropertyValueFactory<Comanda, String>("nome"));
+
         TableColumn<Comanda, Integer> col1 = new TableColumn<>("Comanda");
         col1.setCellValueFactory(new PropertyValueFactory<Comanda, Integer>("id"));
 
@@ -103,7 +117,7 @@ public class Home{
         TableColumn<Comanda, Void> col2 = new TableColumn<>("Acoes");
         col2.setCellFactory(callback);  
 
-        comandas.getColumns().addAll(col1, col2);
+        comandas.getColumns().addAll(col,col1, col2);
         comandas.setItems(control.getLista());
 
         comandas.getSelectionModel().selectedItemProperty().addListener((obs, antigo, novo) -> {
@@ -111,8 +125,8 @@ public class Home{
         });
     }
     public void gerarBindings() {
-        Bindings.bindBidirectional(
-            txtIdComanda.textProperty(), control.idProperty(), (StringConverter) new IntegerStringConverter());
+        Bindings.bindBidirectional(txtIdComanda.textProperty(), control.idProperty(), (StringConverter) new IntegerStringConverter());
+        Bindings.bindBidirectional(txtCpfCliente.textProperty(), control.nomeProperty());       
     }    
     public void alert(AlertType tipo, String texto) {
         Alert alerta = new Alert(tipo);

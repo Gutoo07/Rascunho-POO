@@ -8,7 +8,7 @@ import javafx.collections.ObservableList;
 public class ComandaController {
     private ObservableList<Comanda> lista = FXCollections.observableArrayList();
     private IntegerProperty id = new SimpleIntegerProperty();
-
+    private StringProperty cpf = new SimpleStringProperty();
     private ComandaDAO comandaDAO;
 
     public ComandaController() throws ComandaException {
@@ -17,6 +17,9 @@ public class ComandaController {
 
     public void adicionar() throws ComandaException {
         int comandaId = this.id.get();
+        String cpf = this.cpf.get();
+        Object[] values = comandaDAO.getNomeByCpf(cpf);
+
         for (Comanda aux : lista) {
             if ( aux.getId() == comandaId ) {
                 //abre comanda ativa
@@ -24,8 +27,11 @@ public class ComandaController {
                 return;
             }
         }
-        Comanda c = new Comanda(comandaId);
+        String nome = values[0].toString();
+        int id = Integer.parseInt(values[1].toString());
+        Comanda c = new Comanda(comandaId, nome, id);
         lista.add(c);
+        System.out.println("O CLIENTE ID É: "+c.getClienteId());
         comandaDAO.inserirComanda(c);
     }
     public void excluir(Comanda c) throws ComandaException {
@@ -46,6 +52,17 @@ public class ComandaController {
     public void entityToBoundary(Comanda c) {
         if (c != null) {
             this.id.set(c.getId());
+            Cliente cliente;
+            try {
+                cliente = comandaDAO.getClienteById(c.getClienteId());
+                System.out.println(cliente.getNome());
+                this.cpf.set(cliente.getCpf());
+            }
+             catch (ComandaException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
         }
     }
     
@@ -54,5 +71,9 @@ public class ComandaController {
     }
     public IntegerProperty idProperty() {
         return this.id;
+    }
+
+    public StringProperty nomeProperty() {
+        return this.cpf;
     }
 }

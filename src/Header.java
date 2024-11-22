@@ -13,21 +13,24 @@ import javafx.scene.layout.VBox;
 public class Header extends HBox {
     
     public Header(){
-
+        
         //Isso aqui tem q lembrar que esses parametros vão ser usado no mapScene do main, mas eu vou ver ainda
         
         //Labels
+        
         Label label1 = createText("INICIO");
         Label label2 = createText("COMANDA");
         Label label3 = createText("PRODUTOS");
         Label label4 = createText("CLIENTES");
         //Style
+        this.setPrefHeight(60);
         setSpacing(20);
         setAlignment(Pos.CENTER_LEFT);
         setMargin(label1,new Insets(0,0,0,25)); // só gambiarra pra margin do primeiro Label 
         //Acho que esse width nem ta mudando nada mas mantem no codigo msm assim
         setStyle("-fx-pref-height: 50px; -fx-pref-width: 200px;"+
         "-fx-background-color: linear-gradient(to top right, #ff7f50, #6a5acd);");
+
 
         //Config
         this.getChildren().addAll(label1,label2,label3,label4);
@@ -48,7 +51,12 @@ public class Header extends HBox {
                 //QUALQUER QUE PESSOA QUE VER ESSA SEQUENCIA DE CÓDIGOS NÃO ALTERA NADA AQUI POR TODO AMOR Q TEM A SUA VIDA
                 //PROBLEMA DE PERFOMANCE?? GAMBIARRA
                 Main.pageSelected = title;
-                Main.updateComponent();
+                try {
+                    Main.updateComponent();
+                } catch (ComandaException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
                 Scene scene = Main.mapScene.get(title);
                 Main.changeTela(scene);
             });
