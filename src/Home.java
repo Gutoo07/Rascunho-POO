@@ -24,10 +24,12 @@ public class Home{
     private TextField txtIdComanda = new TextField();
     private TextField txtCpfCliente = new TextField();
     private ComandaController control;
+    private ComandaDAO comandaDAO;
 
     public Home(){
         try {
             control = new ComandaController();
+            comandaDAO = new ComandaDAOimp();
             control.refresh();
         } catch (ComandaException e) {
             alert(AlertType.ERROR, "Erro ao inicializar control: ComandaController");
@@ -35,6 +37,7 @@ public class Home{
 
         Header header = new Header();
         VBox layout = new VBox();
+        
         // Label label = new Label("TELA INICIO"); tirei fora
         // layout.getChildren().addAll(header,label); movido pra baixo apenas
         Scene scene = new Scene(layout, Main.W, Main.H);
@@ -44,7 +47,7 @@ public class Home{
         inputComanda.setHgap(10);
         inputComanda.setVgap(15);
 
-        Button btnAdd = new Button("Abrir Comanda");
+        Button btnAdd = new Button("Criar Comanda");
         btnAdd.setOnAction( e -> {
          try {
             ClienteController cliente = new ClienteController();
@@ -59,8 +62,8 @@ public class Home{
              alert(AlertType.ERROR, "Erro ao adicionar/abrir comanda");
          }
         });
-        
-        inputComanda.add(new Label("Abrir ou Criar Comanda"),0,0);
+
+        inputComanda.add(new Label("Gerenciador de Comandas"),0,0);
         inputComanda.add(new Label("Numero de Comanda"), 0, 1);
         inputComanda.add(new Label("CPF do Cliente"), 0, 2);
         inputComanda.add(txtIdComanda, 1, 1);
@@ -95,7 +98,7 @@ public class Home{
                         {
                             btnExcluir.setOnAction( e -> {
                                 try {
-                                    Comanda c = comandas.getItems().get( getIndex() );
+                                    Comanda c = comandas.getItems().get(getIndex());
                                     control.excluir(c);
                                     comandas.refresh();
                                 } catch (ComandaException err) {
@@ -115,10 +118,40 @@ public class Home{
                     return tc;
                 }
         };
-        TableColumn<Comanda, Void> col2 = new TableColumn<>("Acoes");
+        TableColumn<Comanda, Void> col2 = new TableColumn<>("");
         col2.setCellFactory(callback);  
 
-        comandas.getColumns().addAll(col,col1, col2);
+        TableColumn<Comanda, Void> abriComandaCol = new TableColumn<>("");
+        abriComandaCol.setCellFactory(comandaCol -> new TableCell<Comanda, Void>() {
+            private final Button addButton = new Button("Abrir");
+
+            @Override
+            public void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(addButton);
+                    addButton.setOnAction(e -> {
+                        try {
+                            Comanda c = getTableRow().getItem();
+                            Main.persistenceCliente = comandaDAO.getClienteById(c.getClienteId());
+                            Main.persistenceComanda = c;
+                            Main.pageSelected = "COMANDA";
+                            Main.updateComponent();
+                            Scene scene = Main.mapScene.get("COMANDA");
+                            Main.changeTela(scene);
+                        } catch (ComandaException e1) {
+                            // TODO Auto-generated catch block
+                            e1.printStackTrace();
+                        }
+
+                    });
+                }
+            }
+        });
+
+        comandas.getColumns().addAll(col,col1,abriComandaCol, col2);
         comandas.setItems(control.getLista());
 
         comandas.getSelectionModel().selectedItemProperty().addListener((obs, antigo, novo) -> {
@@ -129,7 +162,7 @@ public class Home{
         Bindings.bindBidirectional(txtIdComanda.textProperty(), control.idProperty(), (StringConverter) new IntegerStringConverter());
         Bindings.bindBidirectional(txtCpfCliente.textProperty(), control.nomeProperty());       
     }    
-    public void alert(AlertType tipo, String texto) {
+    public static void alert(AlertType tipo, String texto) {
         Alert alerta = new Alert(tipo);
         alerta.setHeaderText("Aviso");
         alerta.setContentText(texto);

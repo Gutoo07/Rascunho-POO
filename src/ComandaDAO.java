@@ -21,5 +21,6 @@ public interface ComandaDAO {
     List<Produto> refreshProdutos() throws ComandaException;
     List<Produto> pesquisarProdutoNome(String nome) throws ComandaException;
     //
+    void removeProdutoComanda(int idComanda, int idProduto) throws ComandaException;
     void addProdutoComanda(int idComanda, int idProduto, int qtd) throws ComandaException;
 }

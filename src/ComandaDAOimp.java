@@ -13,8 +13,8 @@ public class ComandaDAOimp implements ComandaDAO {
 
     String hostName = "localhost"; 
     String dbName = "sistemacomanda"; 
-    String user = "sa"; //trocar pro seu user do sql
-    String senha = "458777jK"; //trocar pela sua senha do sql
+    String user = ""; //trocar pro seu user do sql
+    String senha = ""; //trocar pela sua senha do sql
 
     private Connection con = null;
 
@@ -182,11 +182,14 @@ public class ComandaDAOimp implements ComandaDAO {
     public void excluirComanda(Comanda c) throws ComandaException {
         try {
             String SQL = """
+                    DELETE FROM comanda_produto
+                    WHERE comandaId = ?
                     DELETE FROM comanda
                     WHERE id = ?
                     """;
             PreparedStatement stm = con.prepareStatement(SQL);
             stm.setInt(1, c.getId());
+            stm.setInt(2, c.getId());
             int i = stm.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -461,6 +464,27 @@ END */
             }
 
             return lista;
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ComandaException(e);
+        }
+    }
+
+    @Override
+    public void removeProdutoComanda(int idComanda, int idProduto) throws ComandaException {
+        try {
+            String SQL = 
+                """  
+                DELETE FROM comanda_produto
+                WHERE comandaId = ? and produtoId = ?
+                """;
+
+            PreparedStatement stm = con.prepareStatement(SQL);
+            stm.setInt(1, idComanda);
+            stm.setInt(2, idProduto);
+
+            int rs = stm.executeUpdate();
             
         } catch (SQLException e) {
             e.printStackTrace();

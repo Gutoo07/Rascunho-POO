@@ -26,12 +26,36 @@ public class ComandaProdutoController {
         }
     }
 
+    public void less(int idComanda, int id, int qtd) {
+
+        int qtdAtual = map.get(id) - 1;
+        if(qtdAtual > 0){
+            map.put(id,qtdAtual);
+            try {
+                
+                comandaDAO.addProdutoComanda(idComanda, id, map.get(id));
+            } catch (ComandaException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }else{
+            delete(idComanda, id);
+        }
+    }
+
     public void set( int id, int qtd) {
         map.put(id, qtd);
     }
 
     public void delete(int idComanda, int id) {
-        map.remove(id);
+        try {
+            comandaDAO.removeProdutoComanda(idComanda, id);
+            map.remove(id);
+        } catch (ComandaException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
     }
 
     public int get(int id) {

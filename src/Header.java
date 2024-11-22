@@ -22,6 +22,10 @@ public class Header extends HBox {
         //Label label2 = createText("COMANDA");
         Label label3 = createText("PRODUTOS");
         Label label4 = createText("CLIENTES");
+        //Gambiarra para corrigir o design kkkkkkkkk
+        Label labelBugDesign = new Label("TESTE");
+        labelBugDesign.setStyle("-fx-font-size: 18px; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-style: hidden hidden solid hidden; -fx-border-width: 2; -fx-border-color: white; -fx-opacity: 0;");
+
         //Style
         this.setPrefHeight(60);
         setSpacing(20);
@@ -33,7 +37,7 @@ public class Header extends HBox {
 
 
         //Config
-        this.getChildren().addAll(label1,label3,label4);
+        this.getChildren().addAll(label1,label3,label4,labelBugDesign);
 
     }
 

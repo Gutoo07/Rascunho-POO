@@ -5,6 +5,8 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 public class ComandaController {
     private ObservableList<Comanda> lista = FXCollections.observableArrayList();
@@ -23,20 +25,9 @@ public class ComandaController {
 
         for (Comanda aux : lista) {
             if ( aux.getId() == comandaId ) {
-                //abre comanda ativa
-                Main.persistenceCliente = comandaDAO.getClienteById(aux.getClienteId());
-                Main.persistenceComanda = aux;
-                System.out.println(Main.persistenceCliente.getTelefone());
+                //comanda ativa
                 System.out.println("Comanda ativa");
-                Main.pageSelected = "COMANDA";
-                try {
-                    Main.updateComponent();
-                } catch (ComandaException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }
-                Scene scene = Main.mapScene.get("COMANDA");
-                Main.changeTela(scene);
+                Home.alert(AlertType.ERROR, "Uma comanda com esse ID já existe!");
                 return;
             }
         }
