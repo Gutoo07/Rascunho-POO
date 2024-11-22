@@ -364,4 +364,108 @@ public class ComandaDAOimp implements ComandaDAO {
         
     }
 
+    /*IF EXISTS (SELECT 1 FROM comanda_produto WHERE produtoId = 1 AND comandaId = 15)
+BEGIN
+    UPDATE comanda_produto
+    SET qtd = 0
+    WHERE produtoId = 1 AND comandaId = 15;
+END
+ELSE
+BEGIN
+    INSERT INTO comanda_produto (produtoId, comandaId, qtd)
+    VALUES (1, 15, 1);
+END */
+
+    @Override
+    public void addProdutoComanda(int idComanda, int idProduto, int qtd) throws ComandaException {
+        try {
+            String SQL = "IF EXISTS (SELECT 1 FROM comanda_produto WHERE produtoId = ? AND comandaId = ?)\n"
+            + "BEGIN\n"
+            + "    UPDATE comanda_produto\n"
+            + "    SET qtd = ?\n"
+            + "    WHERE produtoId = ? AND comandaId = ?;\n"
+            + "END\n"
+            + "ELSE\n"
+            + "BEGIN\n"
+            + "    INSERT INTO comanda_produto (produtoId, comandaId, qtd)\n"
+            + "    VALUES (?, ?, ?);\n"
+            + "END";
+            System.out.println("QTD: "+qtd);
+            PreparedStatement stm = con.prepareStatement(SQL);
+            stm.setInt(1, idProduto);
+            stm.setInt(2, idComanda);
+            stm.setInt(3, qtd);
+            stm.setInt(4, idProduto);
+            stm.setInt(5, idComanda);
+            stm.setInt(6, idProduto);
+            stm.setInt(7, idComanda);
+            stm.setInt(8, qtd);
+
+            int i = stm.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ComandaException(e);
+        }
+    }
+
+    @Override
+    public Produto getProdutoById(int id) throws ComandaException {
+        try {
+            String SQL = 
+                """
+                SELECT *
+                FROM produto
+                WHERE id = ?;
+                """;
+            PreparedStatement stm = con.prepareStatement(SQL);
+            stm.setInt(1, id);
+
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                Produto produto = new Produto(id);
+                produto.setNome(rs.getString("nome"));
+                produto.setValor(rs.getDouble("valor"));
+                return produto;
+            } else {
+                System.out.println("Nenhum nome encontrado para o ID " + id);
+            }
+            return null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ComandaException(e);
+        }
+    }
+
+    @Override
+    public List<ProdutoComanda> getProdutoComandaByIdComanda(int idComanda) throws ComandaException {
+        try {
+            String SQL = 
+                """
+                SELECT *
+                FROM comanda_produto
+                WHERE comandaId = ?;
+                """;
+
+            List<ProdutoComanda> lista = new ArrayList<>();
+            PreparedStatement stm = con.prepareStatement(SQL);
+            stm.setInt(1, idComanda);
+
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                ProdutoComanda produtoComanda = 
+                new ProdutoComanda(
+                rs.getInt("produtoId"),
+                rs.getInt("comandaId"),
+                rs.getInt("qtd"));
+                lista.add(produtoComanda);
+            }
+
+            return lista;
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ComandaException(e);
+        }
+    }
+
 }

@@ -59,6 +59,7 @@ public class Home{
              alert(AlertType.ERROR, "Erro ao adicionar/abrir comanda");
          }
         });
+        
         inputComanda.add(new Label("Abrir ou Criar Comanda"),0,0);
         inputComanda.add(new Label("Numero de Comanda"), 0, 1);
         inputComanda.add(new Label("CPF do Cliente"), 0, 2);

@@ -6,9 +6,12 @@ public interface ComandaDAO {
     List<Comanda> refreshComandas() throws ComandaException;
     void inserirCliente(Cliente c) throws ComandaException;
     void atualizarCliente(Cliente c) throws ComandaException;
+    //GetBy valor
     Object[] getNomeByCpf(String cpf) throws ComandaException;
     String getNomeById(int id) throws ComandaException;
     Cliente getClienteById(int id) throws ComandaException;
+    Produto getProdutoById(int id) throws ComandaException;
+    List<ProdutoComanda> getProdutoComandaByIdComanda(int idComanda) throws ComandaException;
     void excluirCliente(Cliente c) throws ComandaException;
     List<Cliente> refreshClientes() throws ComandaException;
     List<Cliente> pesquisarClienteNome(String nome) throws ComandaException;
@@ -17,4 +20,6 @@ public interface ComandaDAO {
     void excluirProduto(Produto p) throws ComandaException;
     List<Produto> refreshProdutos() throws ComandaException;
     List<Produto> pesquisarProdutoNome(String nome) throws ComandaException;
+    //
+    void addProdutoComanda(int idComanda, int idProduto, int qtd) throws ComandaException;
 }
