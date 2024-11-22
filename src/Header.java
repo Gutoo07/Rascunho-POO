@@ -19,7 +19,7 @@ public class Header extends HBox {
         //Labels
         
         Label label1 = createText("INICIO");
-        Label label2 = createText("COMANDA");
+        //Label label2 = createText("COMANDA");
         Label label3 = createText("PRODUTOS");
         Label label4 = createText("CLIENTES");
         //Style
@@ -33,7 +33,7 @@ public class Header extends HBox {
 
 
         //Config
-        this.getChildren().addAll(label1,label2,label3,label4);
+        this.getChildren().addAll(label1,label3,label4);
 
     }
 

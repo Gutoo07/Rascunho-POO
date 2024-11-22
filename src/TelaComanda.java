@@ -29,9 +29,9 @@ public class TelaComanda{
         grid.setVgap(10);
 
 
-        Label nomeLabel = new Label("Nome: Kevin Simas");
-        Label telefoneLabel = new Label("Telefone: 27346505");
-        Label cpfLabel = new Label("CPF: 36");
+        Label nomeLabel = new Label("Nome: "+ Main.persistenceCliente.getNome());
+        Label telefoneLabel = new Label("Telefone: "+ Main.persistenceCliente.getTelefone());
+        Label cpfLabel = new Label("CPF: "+ Main.persistenceCliente.getCpf());
 
         //Tabela Produtos
         TableView<Produto> tabelaProdutos = new TableView<>();

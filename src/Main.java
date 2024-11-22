@@ -17,8 +17,11 @@ public class Main extends Application {
     private static Stage stage;
     public static final int H = 500;
     public static final int W = 900;
+    public static final String PersistenceDataPage = null;
     public static Map<String,Scene> mapScene = new HashMap(); 
     public static String pageSelected = "INICIO";
+    public static Cliente persistenceCliente = new Cliente(-1);
+    public static Comanda persistenceComanda = new Comanda(-1);
     
     //map das telas scenes
     //tem que ter um em cada tela, e as tela vai ser divida por aqui java
