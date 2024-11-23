@@ -77,7 +77,7 @@ inner join comanda_produto cop
 on co.id = cop.comandaId
 inner join produto p
 on cop.produtoId = p.id
-where co.id = 0 and p.id = 1
+--where co.id = 0 and p.id = 1
 group by p.id, co.id
 --order by co.id
 
@@ -86,13 +86,20 @@ select COUNT(co.id) as comandas_abertas
 from comanda co
 
 --Total Consumido de Todas as Comandas
-SELECT SUM(SUM(cop.qtd * p.valor)) as total_comandas
+SELECT SUM(cop.qtd * p.valor) AS total_comandas
 FROM comanda co
 INNER JOIN comanda_produto cop
-ON co.id = cop.comandaId
+ON cop.comandaId = co.id
 INNER JOIN produto p
 ON cop.produtoId = p.id
-GROUP BY co.id
+
+--Select Comandas Vazias
+SELECT co.id
+FROM comanda co
+LEFT OUTER JOIN comanda_produto cop
+ON co.id = cop.comandaId
+WHERE cop.comandaId IS NULL -- and co.id = 3
+
 
 select * from comanda
 select * from comanda_produto

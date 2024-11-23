@@ -5,9 +5,11 @@ import dao.ComandaException;
 import control.HomeController;
 import  control.ClienteController;
 import model.Comanda;
+import model.Produto;
 import view.Main;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -137,11 +139,11 @@ public class Home{
                     return tc;
                 }
         };
-        TableColumn<Comanda, Void> col2 = new TableColumn<>("");
-        col2.setCellFactory(callback);  
+        TableColumn<Comanda, Void> excluirComandaCol = new TableColumn<>("");
+        excluirComandaCol.setCellFactory(callback);  
 
-        TableColumn<Comanda, Void> abriComandaCol = new TableColumn<>("");
-        abriComandaCol.setCellFactory(comandaCol -> new TableCell<Comanda, Void>() {
+        TableColumn<Comanda, Void> abrirComandaCol = new TableColumn<>("");
+        abrirComandaCol.setCellFactory(comandaCol -> new TableCell<Comanda, Void>() {
             private final Button addButton = new Button("Abrir");
 
             @Override
@@ -170,7 +172,17 @@ public class Home{
             }
         });
 
-        comandas.getColumns().addAll(col,col1,abriComandaCol, col2);
+        TableColumn<Comanda, String> colVazia = new TableColumn<>("");
+        colVazia.setCellValueFactory(cellData -> {
+            try {
+                return new SimpleStringProperty(control.getComandaVazia(cellData.getValue().getId()));
+            } catch (ComandaException e) {
+                e.printStackTrace();
+            }
+            return null;
+        });
+
+        comandas.getColumns().addAll(col,col1, abrirComandaCol, excluirComandaCol, colVazia);
         comandas.setItems(control.getLista());
 
         comandas.getSelectionModel().selectedItemProperty().addListener((obs, antigo, novo) -> {

@@ -47,7 +47,7 @@ public class HomeController {
         comandaDAO.inserirComanda(c);
     }
     public void excluir(Comanda c) throws ComandaException {
-        if (c.getValorPago() >= c.getValorTotal()) {
+        if (c.getValorPago() >= comandaDAO.getValorTotalComanda(c.getId())) {
             lista.remove(c);
             comandaDAO.excluirComanda(c);
         }
@@ -82,6 +82,12 @@ public class HomeController {
     }
     public double getTotalComandas() throws ComandaException {
         return comandaDAO.getTotalComandas();
+    }
+    public String getComandaVazia(int idComanda) throws ComandaException {
+        if (comandaDAO.getComandaVazia(idComanda) == true) {
+            return "Comanda Vazia";
+        }
+        return "";
     }
     
     public ObservableList<Comanda> getLista() {

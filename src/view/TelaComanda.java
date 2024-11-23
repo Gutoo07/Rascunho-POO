@@ -241,7 +241,7 @@ public class TelaComanda {
 
     private void atualizarTabelaComanda() throws ComandaException {
         List<ProdutoComanda> lista = comandaDAO.getProdutoComandaByIdComanda(Main.persistenceComanda.getId());
-        System.out.println("Lista: " + lista.size() + "produtos diferentes");
+        System.out.println("Lista: " + lista.size() + " produtos diferentes");
         tabelaComanda.getItems().clear();
         // Double valorTotal = 0.0;
         for(ProdutoComanda produtoComanda : lista){

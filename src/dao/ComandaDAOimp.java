@@ -242,9 +242,9 @@ public class ComandaDAOimp implements ComandaDAO {
             while(rs.next()) {
                 int clientId = rs.getInt("clienteId");
                 String nome = getNomeById(clientId);
-                System.out.println("O NOME É: " + nome);
+                // System.out.println("O NOME É: " + nome);
                 Comanda c = new Comanda(rs.getInt("id"),nome,clientId);
-                c.setValorTotal(rs.getDouble("valorPago"));
+                // c.setValorTotal(rs.getDouble("valorPago"));
                 c.setValorPago(rs.getDouble("valorPago"));
                 c.setClienteId(clientId);
                 lista.add(c);
@@ -478,7 +478,6 @@ END */
     @Override 
     public double getValorTotalComanda(int idComanda) throws ComandaException {
         try {
-            System.out.println("\n\n\n\nPegando Valor Total da Comanda "+ idComanda);
             double valorTotalComanda = 0.0;
             String SQL = """
                     SELECT co.id as comanda, SUM(cop.qtd * p.valor) AS valor_total
@@ -586,6 +585,25 @@ END */
                 totalComandas = rs.getDouble("total_comandas");
             }
             return totalComandas;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ComandaException(e);
+        }
+    }
+    @Override
+    public boolean getComandaVazia(int idComanda) throws ComandaException {
+        try {
+            String SQL = """
+                SELECT co.id
+                FROM comanda co
+                LEFT OUTER JOIN comanda_produto cop
+                ON co.id = cop.comandaId
+                WHERE cop.comandaId IS NULL AND co.id = ?
+                    """;
+            PreparedStatement stm = con.prepareStatement(SQL);
+            stm.setInt(1, idComanda);
+            ResultSet rs = stm.executeQuery();
+            return rs.next();
         } catch (SQLException e) {
             e.printStackTrace();
             throw new ComandaException(e);

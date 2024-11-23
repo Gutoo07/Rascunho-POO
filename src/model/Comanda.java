@@ -3,7 +3,7 @@ package model;
 public class Comanda {
     private int id;
     private String nome;
-    private double valorTotal = 0.0;
+    // private double valorTotal = 0.0;
     private double valorPago = 0.0;
     private int clienteId;
 
@@ -27,12 +27,12 @@ public class Comanda {
     public int getId() {
         return this.id;
     }
-    public void setValorTotal(double valorTotal) {
-        this.valorTotal = valorTotal;
-    }
-    public double getValorTotal() {
-        return this.valorTotal;
-    }
+    // public void setValorTotal(double valorTotal) {
+    //     this.valorTotal = valorTotal;
+    // }
+    // public double getValorTotal() {
+    //     return this.valorTotal;
+    // }
     public void setValorPago(double valorPago) {
         this.valorPago = valorPago;
     }
