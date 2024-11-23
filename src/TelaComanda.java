@@ -18,14 +18,13 @@ import javafx.stage.Modality;
 public class TelaComanda {
     TextField txtNomeCliente = new TextField("");
     TextField txtTelefoneCliente = new TextField("");
-    ComandaProdutoController produtoController = new ComandaProdutoController();
-    TableView<Produto> tabelaComanda = new TableView<>();
     Label valorTotalLabel;
+    TableView<Produto> tabelaComanda = new TableView<>();
+    
+    ComandaProdutoController produtoController = new ComandaProdutoController();
     ProdutoController produtoControllerDisponiveis = new ProdutoController();
+    
     private ComandaDAO comandaDAO;
-    
-
-    
 
     public TelaComanda() throws ComandaException {
         Header header = new Header();
@@ -45,7 +44,7 @@ public class TelaComanda {
         TableColumn<Produto, String> nomeProdutoCol = new TableColumn<>("Nome");
         nomeProdutoCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNome()));
 
-        TableColumn<Produto, Double> valorProdutoCol = new TableColumn<>("Valor");
+        TableColumn<Produto, Double> valorProdutoCol = new TableColumn<>("Valor Uni.");
         valorProdutoCol.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getValor()).asObject());
 
         TableColumn<Produto, Void> addProdutoCol = new TableColumn<>("Adicionar");
@@ -88,8 +87,18 @@ public class TelaComanda {
         TableColumn<Produto, Integer> qtdComandaCol = new TableColumn<>("Qtd");
         qtdComandaCol.setCellValueFactory(cellData -> new SimpleIntegerProperty(produtoController.get(cellData.getValue().getId())).asObject());
 
-        TableColumn<Produto, Double> valorComandaCol = new TableColumn<>("Valor");
+        TableColumn<Produto, Double> valorComandaCol = new TableColumn<>("Valor Uni.");
         valorComandaCol.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getValor()).asObject());
+
+        TableColumn<Produto, Double> valorTotalProduto = new TableColumn<>("Valor Total");
+        valorTotalProduto.setCellValueFactory(cellData -> {
+            try {
+                return new SimpleDoubleProperty(produtoController.getValorTotalProduto(Main.persistenceComanda.getId(), cellData.getValue().getId())).asObject();
+            } catch (ComandaException e) {
+                e.printStackTrace();
+            }
+            return null;
+        });
 
         TableColumn<Produto, Void> lessProdutoCol = new TableColumn<>("");
         lessProdutoCol.setCellFactory(col -> new TableCell<Produto, Void>() {
@@ -147,14 +156,14 @@ public class TelaComanda {
             }
         });
 
-        tabelaComanda.getColumns().addAll(nomeComandaCol,valorComandaCol,qtdComandaCol,lessProdutoCol,deleteProdutoCol);
+        tabelaComanda.getColumns().addAll(nomeComandaCol,valorComandaCol,qtdComandaCol, valorTotalProduto, lessProdutoCol,deleteProdutoCol);
 
 
         //Pagamento
         VBox painelDireita = new VBox(10);
         painelDireita.setPadding(new javafx.geometry.Insets(10));
 
-        valorTotalLabel = new Label("Valor Total: R$ "+ Main.persistenceComanda.getValorTotal()); 
+        valorTotalLabel = new Label("Valor Total: R$ "+ comandaDAO.getValorTotalComanda(Main.persistenceComanda.getId())); 
         Button pagarButton = new Button("Pagar");
 
         pagarButton.setOnAction(e -> {
@@ -191,7 +200,7 @@ public class TelaComanda {
         grid.add(cpfLabel, 0, 2);
         grid.add(new Label("Produtos Disponíveis"), 0, 3);
         grid.add(tabelaProdutos, 0, 4, 3, 1);
-        grid.add(new Label("Comanda"), 5, 3);
+        grid.add(new Label("Comanda "+Main.persistenceComanda.getId()), 5, 3);
         grid.add(tabelaComanda, 5, 4, 3, 1);
         grid.add(painelDireita, 8, 0, 1, 5);  // Adiciona a área à direita
 
@@ -202,20 +211,17 @@ public class TelaComanda {
         atualizarTabelaComanda();
     }
 
-
-
-
     private void atualizarTabelaComanda() throws ComandaException {
         List<ProdutoComanda> lista = comandaDAO.getProdutoComandaByIdComanda(Main.persistenceComanda.getId());
-        System.out.println("Lista: " + lista.size());
+        System.out.println("Lista: " + lista.size() + "produtos diferentes");
         tabelaComanda.getItems().clear();
-        Double valorTotal = 0.0;
+        // Double valorTotal = 0.0;
         for(ProdutoComanda produtoComanda : lista){
-            Produto produto = comandaDAO.getProdutoById(produtoComanda.getIdProduto());
             produtoController.set(produtoComanda.getIdProduto(), produtoComanda.getQtd());
-            valorTotal += produto.getValor() * produtoComanda.getQtd();
+            // valorTotal += produto.getValor() * produtoComanda.getQtd();
         }
-        valorTotalLabel.setText("Valor Total: R$ "+ valorTotal);
+        // valorTotalLabel.setText("Valor Total: R$ "+ valorTotal);
+        valorTotalLabel.setText("Valor Total: R$ "+ comandaDAO.getValorTotalComanda(Main.persistenceComanda.getId()));
         
         produtoController.getMap().forEach((id, qtd) -> {
             Produto produto;

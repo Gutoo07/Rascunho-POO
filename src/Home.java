@@ -23,14 +23,20 @@ public class Home{
     private TableView<Comanda> comandas = new TableView<>();
     private TextField txtIdComanda = new TextField();
     private TextField txtCpfCliente = new TextField();
-    private ComandaController control;
+    private Label comandasAbertas;
+    private Label totalComandas;
+
+    private HomeController control;
     private ComandaDAO comandaDAO;
 
-    public Home(){
+    public Home() throws ComandaException {
         try {
-            control = new ComandaController();
+            control = new HomeController();
             comandaDAO = new ComandaDAOimp();
-            control.refresh();
+            comandasAbertas = new Label("Comandas Abertas: "+control.contarComandasAbertas());
+            totalComandas = new Label("Total de Todas as Comandas: "+ control.getTotalComandas());
+            atualizarHome();
+            // control.refresh();
         } catch (ComandaException e) {
             alert(AlertType.ERROR, "Erro ao inicializar control: ComandaController");
         }
@@ -56,7 +62,8 @@ public class Home{
                 alert(AlertType.ERROR, "Cliente não existe!");
             }else{
                 control.adicionar();
-                comandas.refresh();
+                atualizarHome();
+                // comandas.refresh();
             }
          } catch (ComandaException erro) {
              alert(AlertType.ERROR, "Erro ao adicionar/abrir comanda");
@@ -69,6 +76,8 @@ public class Home{
         inputComanda.add(txtIdComanda, 1, 1);
         inputComanda.add(txtCpfCliente, 1, 2);
         inputComanda.add(btnAdd, 0, 3);
+        inputComanda.add(comandasAbertas, 3, 0);
+        inputComanda.add(totalComandas, 3, 1);
 
         //Borderpane principal contendo o Gridpane e a TableView de comandas
         BorderPane paneGeral = new BorderPane();
@@ -100,7 +109,8 @@ public class Home{
                                 try {
                                     Comanda c = comandas.getItems().get(getIndex());
                                     control.excluir(c);
-                                    comandas.refresh();
+                                    atualizarHome();
+                                    // comandas.refresh();
                                 } catch (ComandaException err) {
                                     alert(AlertType.ERROR, "Erro ao Excluir");
                                 }
@@ -167,5 +177,11 @@ public class Home{
         alerta.setHeaderText("Aviso");
         alerta.setContentText(texto);
         alerta.showAndWait();
+    }
+    public void atualizarHome() throws ComandaException {
+        control.refresh();
+        comandas.refresh();
+        comandasAbertas.setText("Comandas Abertas : " + control.contarComandasAbertas());
+        totalComandas.setText("Total de Todas as Comandas: "+ control.getTotalComandas());
     }
 }

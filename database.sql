@@ -59,9 +59,46 @@ CREATE TABLE comanda_produto(
 	FOREIGN KEY (produtoId) REFERENCES produto(id),
 	FOREIGN KEY (comandaID) REFERENCES comanda(id)
 )
-select * from cliente
+
+--Valor Total da Comanda
+SELECT co.id as comanda, SUM(cop.qtd * p.valor) AS valor_total
+FROM comanda co
+INNER JOIN comanda_produto cop
+ON cop.comandaId = co.id
+INNER JOIN produto p
+ON cop.produtoId = p.id
+--WHERE co.id = 2
+GROUP BY co.id
+
+--Valor Total dos Produtos em uma Comanda
+select SUM(cop.qtd * p.valor) as valor_total_produto
+from comanda co
+inner join comanda_produto cop
+on co.id = cop.comandaId
+inner join produto p
+on cop.produtoId = p.id
+where co.id = 0 and p.id = 1
+group by p.id, co.id
+--order by co.id
+
+--Total de Comandas Abertas
+select COUNT(co.id) as comandas_abertas
+from comanda co
+
+--Total Consumido de Todas as Comandas
+SELECT SUM(SUM(cop.qtd * p.valor)) as total_comandas
+FROM comanda co
+INNER JOIN comanda_produto cop
+ON co.id = cop.comandaId
+INNER JOIN produto p
+ON cop.produtoId = p.id
+GROUP BY co.id
+
 select * from comanda
+select * from comanda_produto
+select * from cliente
 select * from produto
+
 
 
 delete from cliente

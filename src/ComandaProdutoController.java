@@ -61,6 +61,9 @@ public class ComandaProdutoController {
     public int get(int id) {
         return map.getOrDefault(id, 0);
     }
+    public double getValorTotalProduto(int idComanda, int idProduto) throws ComandaException {
+        return comandaDAO.getValorTotalProduto(idComanda, idProduto);
+    }
 
     public Map<Integer, Integer> getMap() {
         return map;

@@ -23,4 +23,8 @@ public interface ComandaDAO {
     //
     void removeProdutoComanda(int idComanda, int idProduto) throws ComandaException;
     void addProdutoComanda(int idComanda, int idProduto, int qtd) throws ComandaException;
+    double getValorTotalComanda(int idComanda) throws ComandaException;
+    double getValorTotalProduto(int idComanda, int idProduto) throws ComandaException;
+    int contarComandasAbertas() throws ComandaException;
+    double getTotalComandas() throws ComandaException;
 }

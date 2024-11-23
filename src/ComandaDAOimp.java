@@ -12,9 +12,9 @@ import javax.naming.spi.DirStateFactory.Result;
 public class ComandaDAOimp implements ComandaDAO {
 
     String hostName = "localhost"; 
-    String dbName = "sistemacomanda"; 
-    String user = ""; //trocar pro seu user do sql
-    String senha = ""; //trocar pela sua senha do sql
+    String dbName = "trabalhobd"; 
+    String user = "guto"; //trocar pro seu user do sql
+    String senha = "guto"; //trocar pela sua senha do sql
 
     private Connection con = null;
 
@@ -23,7 +23,7 @@ public class ComandaDAOimp implements ComandaDAO {
         try { 
             Class.forName("net.sourceforge.jtds.jdbc.Driver");
             con = DriverManager.getConnection(String.format(
-                "jdbc:jtds:sqlserver://%s:1433;databaseName=%s;user=%s;password=%s;", hostName, dbName, user, senha
+                "jdbc:jtds:sqlserver://%s:57480;databaseName=%s;user=%s;password=%s;", hostName, dbName, user, senha
             )); //SQLServer
         } catch (ClassNotFoundException | SQLException e) { 
             e.printStackTrace();
@@ -344,9 +344,9 @@ public class ComandaDAOimp implements ComandaDAO {
     public Cliente getClienteById(int id) throws ComandaException {
         try {
             String SQL = """
-                    SELECT * FROM cliente WHERE id LIKE ?
+                    SELECT * FROM cliente WHERE id = ?
                     """;
-            System.out.println("SELECT * FROM cliente WHERE id LIKE" + id);
+            System.out.println("SELECT * FROM cliente WHERE id = " + id);
             PreparedStatement stm = con.prepareStatement(SQL);
             stm.setInt(1, id);
             ResultSet rs = stm.executeQuery();
@@ -445,8 +445,10 @@ END */
             String SQL = 
                 """
                 SELECT *
-                FROM comanda_produto
-                WHERE comandaId = ?;
+                FROM comanda_produto cop
+                INNER JOIN comanda co
+                ON cop.comandaId = co.id
+                WHERE co.id = ?
                 """;
 
             List<ProdutoComanda> lista = new ArrayList<>();
@@ -470,7 +472,79 @@ END */
             throw new ComandaException(e);
         }
     }
-
+    @Override 
+    public double getValorTotalComanda(int idComanda) throws ComandaException {
+        try {
+            System.out.println("\n\n\n\nPegando Valor Total da Comanda "+ idComanda);
+            double valorTotalComanda = 0.0;
+            String SQL = """
+                    SELECT co.id as comanda, SUM(cop.qtd * p.valor) AS valor_total
+                    FROM comanda co
+                    INNER JOIN comanda_produto cop
+                    ON cop.comandaId = co.id
+                    INNER JOIN produto p
+                    ON cop.produtoId = p.id
+                    WHERE co.id = ?
+                    GROUP BY co.id
+                    """;
+            PreparedStatement stm = con.prepareStatement(SQL);
+            stm.setInt(1, idComanda);
+            ResultSet rs = stm.executeQuery();
+            while(rs.next()) {
+                valorTotalComanda = rs.getDouble("valor_total");
+            }
+            return valorTotalComanda;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ComandaException(e);
+        }
+    }
+    @Override
+    public double getValorTotalProduto(int idComanda, int idProduto) throws ComandaException {
+        try {
+            Double valorTotalProduto = 0.0;
+            String SQL = """
+                SELECT SUM(cop.qtd * p.valor) AS valor_total_produto
+                FROM comanda co
+                INNER JOIN comanda_produto cop
+                ON co.id = cop.comandaId
+                INNER join produto p
+                ON cop.produtoId = p.id
+                WHERE co.id = ? AND p.id = ?
+                GROUP BY p.id, co.id
+                    """;
+            PreparedStatement stm = con.prepareStatement(SQL);
+            stm.setInt(1, idComanda);
+            stm.setInt(2, idProduto);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                valorTotalProduto = rs.getDouble("valor_total_produto");
+            }
+            return valorTotalProduto;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ComandaException(e);
+        }
+    }
+    @Override
+    public int contarComandasAbertas() throws ComandaException {
+        try {
+            int comandasAbertas = 0;
+            String SQL = """
+                    SELECT COUNT(co.id) as comandas_abertas
+                    FROM comanda co
+                    """;
+            PreparedStatement stm = con.prepareStatement(SQL);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                comandasAbertas = rs.getInt("comandas_abertas");
+            }
+            return comandasAbertas;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ComandaException(e);
+        }
+    }
     @Override
     public void removeProdutoComanda(int idComanda, int idProduto) throws ComandaException {
         try {
@@ -486,6 +560,29 @@ END */
 
             int rs = stm.executeUpdate();
             
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ComandaException(e);
+        }
+    }
+    @Override 
+    public double getTotalComandas() throws ComandaException {
+        try {
+            double totalComandas = 0.0;
+            String SQL = """
+                SELECT SUM(cop.qtd * p.valor) AS total_comandas
+                FROM comanda co
+                INNER JOIN comanda_produto cop
+                ON cop.comandaId = co.id
+                INNER JOIN produto p
+                ON cop.produtoId = p.id
+                    """;
+            PreparedStatement stm = con.prepareStatement(SQL);
+            ResultSet rs = stm.executeQuery();
+            while(rs.next()) {
+                totalComandas = rs.getDouble("total_comandas");
+            }
+            return totalComandas;
         } catch (SQLException e) {
             e.printStackTrace();
             throw new ComandaException(e);
