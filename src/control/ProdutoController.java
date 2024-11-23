@@ -58,8 +58,13 @@ public class ProdutoController {
         lista.addAll(comandaDAO.refreshProdutos());
     }
     public void excluir(Produto p) throws ComandaException {
-        lista.remove(p);
-        comandaDAO.excluirProduto(p);
+        if (comandaDAO.pesquisarProdutoNaoUsado(p.getId()) == false) {
+            alert(AlertType.INFORMATION, "Este produto esta sendo usado por alguma comanda.").show();
+        } else {
+            lista.remove(p);
+            comandaDAO.excluirProduto(p);
+        }
+
     }
     public void entityToBoundary(Produto p) {
         if (p != null) {

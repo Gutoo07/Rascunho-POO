@@ -609,5 +609,24 @@ END */
             throw new ComandaException(e);
         }
     }
+    @Override 
+    public boolean pesquisarProdutoNaoUsado(int idProduto) throws ComandaException {
+        try {
+            String SQL = """
+                SELECT p.id
+                FROM produto p
+                LEFT OUTER JOIN comanda_produto cop
+                ON p.id = cop.produtoId
+                WHERE cop.produtoId IS NULL AND p.id = ?
+                    """;
+            PreparedStatement stm = con.prepareStatement(SQL);
+            stm.setInt(1, idProduto);
+            ResultSet rs = stm.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ComandaException(e);
+        }
+    } 
 
 }

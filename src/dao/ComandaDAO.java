@@ -31,4 +31,5 @@ public interface ComandaDAO {
     int contarComandasAbertas() throws ComandaException;
     double getTotalComandas() throws ComandaException;
     boolean getComandaVazia(int idComanda) throws ComandaException;
+    boolean pesquisarProdutoNaoUsado(int idProduto) throws ComandaException;
 }

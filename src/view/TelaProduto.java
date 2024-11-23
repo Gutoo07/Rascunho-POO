@@ -127,6 +127,7 @@ public class TelaProduto {
                             btnExcluir.setOnAction( e -> {
                                 try {
                                     Produto p = produtos.getItems().get( getIndex() );
+                                    System.out.println("botao excluir ativado");
                                     control.excluir(p);
                                     produtos.refresh();
                                 } catch (ComandaException erro) {
