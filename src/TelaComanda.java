@@ -1,5 +1,6 @@
 import java.util.List;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -11,6 +12,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -18,6 +20,7 @@ import javafx.stage.Modality;
 public class TelaComanda {
     TextField txtNomeCliente = new TextField("");
     TextField txtTelefoneCliente = new TextField("");
+    TextField txtPesquisarProduto = new TextField("");
     Label valorTotalLabel;
     TableView<Produto> tabelaComanda = new TableView<>();
     
@@ -31,13 +34,14 @@ public class TelaComanda {
         comandaDAO = new ComandaDAOimp();
         VBox vbox = new VBox();
         GridPane grid = new GridPane();
-        grid.setHgap(10);
+        grid.setHgap(50);
         grid.setVgap(10);
 
         Label nomeLabel = new Label("Nome: " + Main.persistenceCliente.getNome());
         Label telefoneLabel = new Label("Telefone: " + Main.persistenceCliente.getTelefone());
         Label cpfLabel = new Label("CPF: " + Main.persistenceCliente.getCpf());
     
+        gerarBindings();
 
         //Produtos
         TableView<Produto> tabelaProdutos = new TableView<>();
@@ -78,7 +82,9 @@ public class TelaComanda {
         tabelaProdutos.getColumns().addAll(nomeProdutoCol, valorProdutoCol, addProdutoCol);
 
         produtoControllerDisponiveis.refresh();
-        tabelaProdutos.getItems().addAll(produtoControllerDisponiveis.getLista());
+        // tabelaProdutos.getItems().addAll(produtoControllerDisponiveis.getLista());
+        tabelaProdutos.setItems(produtoControllerDisponiveis.getLista());
+
 
         //Produtos da Comanda
         TableColumn<Produto, String> nomeComandaCol = new TableColumn<>("Nome");
@@ -156,7 +162,7 @@ public class TelaComanda {
             }
         });
 
-        tabelaComanda.getColumns().addAll(nomeComandaCol,valorComandaCol,qtdComandaCol, valorTotalProduto, lessProdutoCol,deleteProdutoCol);
+        tabelaComanda.getColumns().addAll(nomeComandaCol,valorComandaCol, qtdComandaCol, valorTotalProduto, lessProdutoCol, deleteProdutoCol);
 
 
         //Pagamento
@@ -190,7 +196,14 @@ public class TelaComanda {
                 e1.printStackTrace();
             }
         });
-
+        txtPesquisarProduto.setOnKeyTyped(e -> {
+            try {
+                produtoControllerDisponiveis.pesquisarProdutoNome();
+                tabelaProdutos.refresh();
+            } catch (ComandaException erro) {
+                erro.printStackTrace();
+            }
+        });
         painelDireita.getChildren().addAll(valorTotalLabel, pagarButton);
 
         //config
@@ -198,13 +211,20 @@ public class TelaComanda {
         grid.add(nomeLabel, 0, 0);
         grid.add(telefoneLabel, 0, 1);
         grid.add(cpfLabel, 0, 2);
-        grid.add(new Label("Produtos Disponíveis"), 0, 3);
-        grid.add(tabelaProdutos, 0, 4, 3, 1);
-        grid.add(new Label("Comanda "+Main.persistenceComanda.getId()), 5, 3);
-        grid.add(tabelaComanda, 5, 4, 3, 1);
-        grid.add(painelDireita, 8, 0, 1, 5);  // Adiciona a área à direita
+        // grid.add(new Label("Produtos Disponíveis"), 0, 3);
+        grid.add(new Label("Adicionar / Pesquisar Produtos"), 0, 3);
+        grid.add(txtPesquisarProduto, 0, 4);
+        grid.add(new Label("Comanda "+Main.persistenceComanda.getId()), 2, 4);
 
-        vbox.getChildren().addAll(header, grid);
+        BorderPane borderpane = new BorderPane();
+        // grid.add(tabelaProdutos, 0, 5, 3, 1);
+        borderpane.setLeft(tabelaProdutos);
+        // grid.add(tabelaComanda, 5, 4, 3, 1);
+        borderpane.setCenter(tabelaComanda);
+        grid.add(painelDireita, 2, 0, 1, 5);  // Adiciona a área à direita
+        // borderpane.setRight(painelDireita);
+
+        vbox.getChildren().addAll(header, grid, borderpane);
         Scene scene = new Scene(vbox, Main.W, Main.H);
         Main.mapScene.put("COMANDA", scene);
 
@@ -231,10 +251,12 @@ public class TelaComanda {
                     tabelaComanda.getItems().add(produto);
                 }
             } catch (ComandaException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
  
         });
+    }
+    public void gerarBindings() {
+        Bindings.bindBidirectional(txtPesquisarProduto.textProperty(), produtoControllerDisponiveis.nomeProperty());
     }
 }

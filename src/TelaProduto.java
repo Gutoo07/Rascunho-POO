@@ -57,16 +57,8 @@ public class TelaProduto {
                     }
                 }
         });
-        Button btnPesquisar = new Button("Pesquisar Nome");
-        btnPesquisar.setOnAction(e -> {
-            try {
-                control.pesquisarProdutoNome();
-                produtos.refresh();
-            } catch (ComandaException erro) {
-                alert(AlertType.ERROR, "Erro ao Pesquisar Nome de Produto");
-            }
-        });
-        Button btnLimpar = new Button("Resetar");
+
+        Button btnLimpar = new Button("Limpar Campos");
         btnLimpar.setOnAction(e -> {
             try {
                 txtIdProduto.setText("");
@@ -84,8 +76,7 @@ public class TelaProduto {
         inputProduto.add(new Label("Valor"), 1, 3);
         inputProduto.add(txtValorProduto, 2, 3);
         inputProduto.add(btnAdd, 1, 4);
-        inputProduto.add(btnPesquisar, 2, 4);
-        inputProduto.add(btnLimpar, 3, 4);
+        inputProduto.add(btnLimpar, 2, 4);
 
         //Borderpane Principal
         BorderPane paneGeral = new BorderPane();
@@ -94,6 +85,15 @@ public class TelaProduto {
 
         gerarColunas();
         gerarBindings();
+
+        txtNomeProduto.setOnKeyTyped( e -> {
+            try {
+                control.pesquisarProdutoNome();
+                produtos.refresh();
+            } catch (ComandaException erro) {
+                erro.printStackTrace();
+            }
+        });
 
         layout.getChildren().addAll(header, paneGeral);
         Main.mapScene.put("PRODUTOS", scene);

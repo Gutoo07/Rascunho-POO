@@ -1,6 +1,9 @@
 import java.util.HashMap;
 import java.util.Map;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 public class ComandaProdutoController {
     private static Map<Integer, Integer> map;
     private ComandaDAO comandaDAO;
@@ -10,7 +13,6 @@ public class ComandaProdutoController {
         try {
             comandaDAO = new ComandaDAOimp();
         } catch (ComandaException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -21,7 +23,6 @@ public class ComandaProdutoController {
         try {
             comandaDAO.addProdutoComanda(idComanda, id, map.get(id));
         } catch (ComandaException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -52,10 +53,12 @@ public class ComandaProdutoController {
             comandaDAO.removeProdutoComanda(idComanda, id);
             map.remove(id);
         } catch (ComandaException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         
+    }
+    public void pesquisarProdutoNome() throws ComandaException {
+
     }
 
     public int get(int id) {
