@@ -53,7 +53,7 @@ public class Main extends Application {
     }
 
     //Deus me perdoe por essa gambiarra horrivel
-    public static void updateComponent() throws ComandaException{
+    public static void updateComponent() throws ComandaException {
         System.out.println("UPDATE");
         mapScene.clear();
         new Home();
@@ -61,8 +61,6 @@ public class Main extends Application {
         new TelaCliente();
         new TelaProduto();
     }
-
-
 
     public static void main(String[] args) throws ComandaException {
         updateComponent();

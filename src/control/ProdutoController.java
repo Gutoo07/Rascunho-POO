@@ -26,6 +26,9 @@ public class ProdutoController {
     private ComandaDAO comandaDAO;
 
     public ProdutoController() throws ComandaException {
+        id.set(0);
+        nome.set("");
+        valor.set(0.0);
         comandaDAO = new ComandaDAOimp();
     }
 

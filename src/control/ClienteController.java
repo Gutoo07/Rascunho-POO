@@ -25,6 +25,10 @@ public class ClienteController {
     private ComandaDAO comandaDAO;
 
     public ClienteController() throws ComandaException {
+        id.set(0);
+        nome.set("");
+        telefone.set("");
+        cpf.set("");
         comandaDAO = new ComandaDAOimp();
     }
 

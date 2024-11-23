@@ -23,9 +23,9 @@ import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 
 public class TelaProduto {
-    private TextField txtIdProduto = new TextField("");
-    private TextField txtNomeProduto = new TextField("");
-    private TextField txtValorProduto = new TextField("");
+    private TextField txtIdProduto = new TextField(" ");
+    private TextField txtNomeProduto = new TextField(" ");
+    private TextField txtValorProduto = new TextField(" ");
 
     private TableView<Produto> produtos = new TableView<>();
 
