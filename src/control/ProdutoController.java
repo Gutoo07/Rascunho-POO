@@ -34,37 +34,38 @@ public class ProdutoController {
 
     public void adicionar() throws ComandaException {
         int produtoId = this.id.get();
-        for (Produto p : lista) {
-            if (p.getId() == produtoId) {
-                Optional<ButtonType> opcao = alert(AlertType.CONFIRMATION,
-                    "O ID inserido ja existe no sistema."+
-                    "\nDeseja sobrescrever Nome e Valor?").showAndWait();
-                if (opcao.isPresent() && opcao.get() == ButtonType.OK) {
-                    p.setNome(this.nome.get());
-                    p.setValor(this.valor.get());
-                    comandaDAO.atualizarProduto(p);
-                }
-                return;
-            }
-        }
-        Produto p = new Produto(this.id.get());
+        Produto p = new Produto(produtoId);
         p.setNome(this.nome.get());
         p.setValor(this.valor.get());
-        lista.add(p);
-        comandaDAO.inserirProduto(p);
+
+        if (comandaDAO.getProdutoById(produtoId) != null) {
+            Optional<ButtonType> opcao = alert(AlertType.CONFIRMATION,
+                "O ID inserido ja existe no sistema."+
+                "\nDeseja sobrescrever Nome e Valor?").showAndWait();
+            if (opcao.isPresent() && opcao.get() == ButtonType.OK) {
+                if (comandaDAO.produtoNaoUsado(produtoId)) {
+                    comandaDAO.atualizarProduto(p);
+                    refresh();
+                } else {
+                    alert(AlertType.INFORMATION, "Impossivel alterar: este produto esta sendo usado em alguma comanda.").show();
+                }
+            }
+        } else {
+            comandaDAO.inserirProduto(p);
+            refresh();
+        }
     }
     public void refresh() throws ComandaException {
         lista.clear();
         lista.addAll(comandaDAO.refreshProdutos());
     }
     public void excluir(Produto p) throws ComandaException {
-        if (comandaDAO.pesquisarProdutoNaoUsado(p.getId()) == false) {
-            alert(AlertType.INFORMATION, "Este produto esta sendo usado por alguma comanda.").show();
-        } else {
-            lista.remove(p);
+        if (comandaDAO.produtoNaoUsado(p.getId())) {
             comandaDAO.excluirProduto(p);
+            refresh();
+        } else {
+            alert(AlertType.INFORMATION, "Este produto esta sendo usado por alguma comanda.").show();
         }
-
     }
     public void entityToBoundary(Produto p) {
         if (p != null) {

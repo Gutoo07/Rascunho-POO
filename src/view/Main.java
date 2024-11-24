@@ -35,6 +35,7 @@ public class Main extends Application {
     //import javafx.scene.Parent;
 
     public void start(Stage primaryStage) {
+        System.out.println(primaryStage.getTitle());
         stage = primaryStage;
 
         stage.setTitle("Sistema Comanda | Bar do Bolivia");

@@ -34,26 +34,21 @@ public class ClienteController {
 
     public void adicionar() throws ComandaException {
         int clienteId = this.id.get();
-        for (Cliente c : lista) {
-            if ( c.getId() == clienteId) {
-                Alert alerta = alert(AlertType.CONFIRMATION,
-                "O ID inserido ja existe no sistema.\nDeseja sobrescrever Nome, Telefone e CPF?"); 
-                Optional<ButtonType> opcao = alerta.showAndWait();
-                if (opcao.isPresent() && opcao.get() == ButtonType.OK) {
-                    c.setNome(this.nome.get());
-                    c.setTelefone(this.telefone.get());
-                    c.setCpf(this.cpf.get());
-                    comandaDAO.atualizarCliente(c);
-                }     
-                return;     
-            }         
-        }
         Cliente c = new Cliente(clienteId);
         c.setNome(this.nome.get());
         c.setTelefone(this.telefone.get());
         c.setCpf(this.cpf.get());
-        lista.add(c);
-        comandaDAO.inserirCliente(c);              
+        if (comandaDAO.getClienteById(clienteId) != null) {
+            Optional<ButtonType> opcao = alert(AlertType.CONFIRMATION,
+                "O ID inserido ja existe no sistema."+
+                "\nDeseja sobrescrever Nome, Telefone e CPF?").showAndWait();
+            if (opcao.isPresent() && opcao.get() == ButtonType.OK) {
+                comandaDAO.atualizarCliente(c);
+            }
+        } else {
+            comandaDAO.inserirCliente(c);    
+        }
+        refresh();
     }
     public void refresh() throws ComandaException {
         lista.clear();
@@ -74,8 +69,12 @@ public class ClienteController {
     }
 
     public void excluir(Cliente c) throws ComandaException {
-        lista.remove(c);
-        comandaDAO.excluirCliente(c);
+        if (comandaDAO.clienteInativo(c.getId())) {
+            comandaDAO.excluirCliente(c);
+            refresh();
+        } else {
+            alert(AlertType.INFORMATION, "Este cliente possui alguma comanda aberta.").show();
+        }
     }
     public void entityToBoundary(Cliente c) {
         if (c != null) {

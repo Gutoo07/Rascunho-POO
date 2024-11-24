@@ -360,8 +360,7 @@ public class ComandaDAOimp implements ComandaDAO {
                 c.setCpf(rs.getString("cpf"));
                 return c;
             }
-            return null;
-       
+            return null;       
         } catch (SQLException e) {
             System.out.println("Erro sql");
             //e.printStackTrace();
@@ -406,8 +405,7 @@ END */
             stm.setInt(6, idProduto);
             stm.setInt(7, idComanda);
             stm.setInt(8, qtd);
-
-            int i = stm.executeUpdate();
+            stm.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
             throw new ComandaException(e);
@@ -610,7 +608,7 @@ END */
         }
     }
     @Override 
-    public boolean pesquisarProdutoNaoUsado(int idProduto) throws ComandaException {
+    public boolean produtoNaoUsado(int idProduto) throws ComandaException {
         try {
             String SQL = """
                 SELECT p.id
@@ -628,5 +626,23 @@ END */
             throw new ComandaException(e);
         }
     } 
-
+    @Override
+    public boolean clienteInativo(int clienteId) throws ComandaException {
+        try {
+            String SQL = """
+                SELECT c.id
+                FROM cliente c
+                LEFT OUTER JOIN comanda co
+                ON c.id = co.clienteId
+                WHERE co.clienteId IS NULL AND c.id = ?
+                    """;
+            PreparedStatement stm = con.prepareStatement(SQL);
+            stm.setInt(1, clienteId);
+            ResultSet rs = stm.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new ComandaException(e);
+        }
+    }
 }

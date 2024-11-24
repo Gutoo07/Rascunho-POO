@@ -100,6 +100,31 @@ LEFT OUTER JOIN comanda_produto cop
 ON co.id = cop.comandaId
 WHERE cop.comandaId IS NULL -- and co.id = 3
 
+--Pesquisar produto que nao esta em nenhuma comanda
+SELECT p.id
+FROM produto p
+LEFT OUTER JOIN comanda_produto cop
+ON p.id = cop.produtoId
+WHERE cop.produtoId IS NULL AND p.id = 6
+
+--Pesquisar quantas unidades de um produto foram consumidas atraves de todas as comandas
+SELECT COUNT(p.id) as qtd
+FROM produto p
+INNER JOIN comanda_produto cop
+ON p.id = cop.produtoId
+WHERE p.id = 4
+GROUP BY p.id, p.nome, p.valor
+ORDER BY p.id
+
+--Pesquisar cliente sem comandas abertas
+SELECT c.id
+FROM cliente c
+LEFT OUTER JOIN comanda co
+ON c.id = co.clienteId
+WHERE co.clienteId IS NULL
+
+
+select 0 as zero
 
 select * from comanda
 select * from comanda_produto
