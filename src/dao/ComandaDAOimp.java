@@ -15,9 +15,9 @@ import javax.naming.spi.DirStateFactory.Result;
 public class ComandaDAOimp implements ComandaDAO {
 
     String hostName = "localhost"; 
-    String dbName = "trabalhobd"; 
-    String user = "guto"; //trocar pro seu user do sql
-    String senha = "guto"; //trocar pela sua senha do sql
+    String dbName = ""; 
+    String user = ""; //trocar pro seu user do sql
+    String senha = ""; //trocar pela sua senha do sql
 
     private Connection con = null;
 
@@ -26,7 +26,7 @@ public class ComandaDAOimp implements ComandaDAO {
         try { 
             Class.forName("net.sourceforge.jtds.jdbc.Driver");
             con = DriverManager.getConnection(String.format(
-                "jdbc:jtds:sqlserver://%s:57480;databaseName=%s;user=%s;password=%s;", hostName, dbName, user, senha
+                "jdbc:jtds:sqlserver://%s:1433;databaseName=%s;user=%s;password=%s;", hostName, dbName, user, senha
             )); //SQLServer
         } catch (ClassNotFoundException | SQLException e) { 
             e.printStackTrace();
