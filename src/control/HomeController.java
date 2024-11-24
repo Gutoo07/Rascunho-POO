@@ -34,7 +34,6 @@ public class HomeController {
         for (Comanda aux : lista) {
             if ( aux.getId() == comandaId ) {
                 //comanda ativa
-                System.out.println("Comanda ativa");
                 Home.alert(AlertType.ERROR, "Uma comanda com esse ID já existe!");
                 return;
             }
@@ -43,7 +42,6 @@ public class HomeController {
         int id = Integer.parseInt(values[1].toString());
         Comanda c = new Comanda(comandaId, nome, id);
         lista.add(c);
-        System.out.println("O CLIENTE ID É: "+c.getClienteId());
         comandaDAO.inserirComanda(c);
     }
     public void excluir(Comanda c) throws ComandaException {
@@ -67,7 +65,6 @@ public class HomeController {
             Cliente cliente;
             try {
                 cliente = comandaDAO.getClienteById(c.getClienteId());
-                System.out.println(cliente.getNome());
                 this.cpf.set(cliente.getCpf());
             }
              catch (ComandaException e) {

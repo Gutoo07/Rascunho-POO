@@ -31,7 +31,6 @@ public class ComandaDAOimp implements ComandaDAO {
         } catch (ClassNotFoundException | SQLException e) { 
             e.printStackTrace();
             throw new ComandaException(e);
-            //System.out.println("Erro conexão com Banco de Dados!");
         }
     }
 
@@ -242,9 +241,7 @@ public class ComandaDAOimp implements ComandaDAO {
             while(rs.next()) {
                 int clientId = rs.getInt("clienteId");
                 String nome = getNomeById(clientId);
-                // System.out.println("O NOME É: " + nome);
                 Comanda c = new Comanda(rs.getInt("id"),nome,clientId);
-                // c.setValorTotal(rs.getDouble("valorPago"));
                 c.setValorPago(rs.getDouble("valorPago"));
                 c.setClienteId(clientId);
                 lista.add(c);
@@ -349,7 +346,6 @@ public class ComandaDAOimp implements ComandaDAO {
             String SQL = """
                     SELECT * FROM cliente WHERE id = ?
                     """;
-            System.out.println("SELECT * FROM cliente WHERE id = " + id);
             PreparedStatement stm = con.prepareStatement(SQL);
             stm.setInt(1, id);
             ResultSet rs = stm.executeQuery();
@@ -395,7 +391,6 @@ END */
             + "    INSERT INTO comanda_produto (produtoId, comandaId, qtd)\n"
             + "    VALUES (?, ?, ?);\n"
             + "END";
-            System.out.println("QTD: "+qtd);
             PreparedStatement stm = con.prepareStatement(SQL);
             stm.setInt(1, idProduto);
             stm.setInt(2, idComanda);

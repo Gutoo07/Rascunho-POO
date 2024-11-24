@@ -73,7 +73,6 @@ public class TelaComanda {
                     addButton.setOnAction(e -> {
                         Produto produto = getTableRow().getItem();
                         if (produto != null) {
-                            System.out.println("Produto selecionado: " + produto.getNome());
                             produtoController.add(Main.persistenceComanda.getId(),produto.getId(), 1);
                             try {
                                 atualizarTabelaComanda();
@@ -128,7 +127,6 @@ public class TelaComanda {
                     addButton.setOnAction(e -> {
                         Produto produto = getTableRow().getItem();
                         if (produto != null) {
-                            System.out.println("Produto selecionado: " + produto.getNome());
                             produtoController.less(Main.persistenceComanda.getId(),produto.getId(), 1);
                             try {
                                 atualizarTabelaComanda();
@@ -156,7 +154,6 @@ public class TelaComanda {
                     addButton.setOnAction(e -> {
                         Produto produto = getTableRow().getItem();
                         if (produto != null) {
-                            System.out.println("Produto selecionado: " + produto.getNome());
                             produtoController.delete(Main.persistenceComanda.getId(),produto.getId());
                             try {
                                 atualizarTabelaComanda();
@@ -241,7 +238,6 @@ public class TelaComanda {
 
     private void atualizarTabelaComanda() throws ComandaException {
         List<ProdutoComanda> lista = comandaDAO.getProdutoComandaByIdComanda(Main.persistenceComanda.getId());
-        System.out.println("Lista: " + lista.size() + " produtos diferentes");
         tabelaComanda.getItems().clear();
         // Double valorTotal = 0.0;
         for(ProdutoComanda produtoComanda : lista){
