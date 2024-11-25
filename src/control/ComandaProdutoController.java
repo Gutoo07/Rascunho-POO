@@ -8,6 +8,8 @@ import java.util.Map;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+
+/*Controler da tela de Comanda */
 public class ComandaProdutoController {
     private static Map<Integer, Integer> map;
     private ComandaDAO comandaDAO;
@@ -31,6 +33,7 @@ public class ComandaProdutoController {
         }
     }
 
+    /* Diminui o numero de qtd Produto*/
     public void less(int idComanda, int id, int qtd) {
 
         int qtdAtual = map.get(id) - 1;
@@ -48,10 +51,12 @@ public class ComandaProdutoController {
         }
     }
 
+    /* Altera valor da quantidade de produto*/
     public void set( int id, int qtd) {
         map.put(id, qtd);
     }
 
+    /* Deleta o pedido da lista*/
     public void delete(int idComanda, int id) {
         try {
             comandaDAO.removeProdutoComanda(idComanda, id);
