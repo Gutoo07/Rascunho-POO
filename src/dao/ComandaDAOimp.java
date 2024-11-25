@@ -34,7 +34,7 @@ public class ComandaDAOimp implements ComandaDAO {
         }
     }
 
-    /*Função para inserir o Objeto Comanda na Tabela comanda do Banco de Dados*/
+    /**Função para inserir o Objeto Comanda na Tabela comanda do Banco de Dados*/
     @Override
     public void inserirComanda(Comanda c) throws ComandaException {
         try {
@@ -52,7 +52,7 @@ public class ComandaDAOimp implements ComandaDAO {
         }
     }
 
-    /*Função para inserir o Objeto Cliente na Tabela cliente do Banco de Dados*/
+    /**Função para inserir o Objeto Cliente na Tabela cliente do Banco de Dados*/
     @Override
     public void inserirCliente(Cliente c) throws ComandaException {
         try {
@@ -72,7 +72,7 @@ public class ComandaDAOimp implements ComandaDAO {
         }
     }
 
-    /*Função para inserir o Objeto Produto na Tabela produto do Banco de Dados*/
+    /**Função para inserir o Objeto Produto na Tabela produto do Banco de Dados*/
     @Override
     public void inserirProduto(Produto p) throws ComandaException {
         try {
@@ -91,7 +91,7 @@ public class ComandaDAOimp implements ComandaDAO {
         }
     }    
 
-    /*Função para buscar e retornar um vetor Objeto contendo nome e id do cliente
+    /**Função para buscar e retornar um vetor Objeto contendo nome e id do cliente
     */
     public Object[] getNomeByCpf(String cpf) throws ComandaException{
         try {
@@ -122,7 +122,7 @@ public class ComandaDAOimp implements ComandaDAO {
         }
     }
 
-    /*Função para retornar o nome do Cliente apartir do ID*/
+    /**Função para retornar o nome do Cliente apartir do ID*/
     public String getNomeById(int id) throws ComandaException{
         try {
             String SQL = 
@@ -148,7 +148,7 @@ public class ComandaDAOimp implements ComandaDAO {
         }
     }
 
-    /*Função para atualizar informações do Cliente*/
+    /**Função para atualizar informações do Cliente*/
     @Override
     public void atualizarCliente(Cliente c) throws ComandaException {
         try {
@@ -171,7 +171,7 @@ public class ComandaDAOimp implements ComandaDAO {
         }
     }    
 
-    /*Função para atualizar informações do Produto*/
+    /**Função para atualizar informações do Produto*/
     @Override
     public void atualizarProduto(Produto p) throws ComandaException {
         try {
@@ -192,7 +192,7 @@ public class ComandaDAOimp implements ComandaDAO {
         }
     }      
 
-    /*Função para excluir comanda da Tabela*/
+    /**Função para excluir comanda da Tabela*/
     @Override
     public void excluirComanda(Comanda c) throws ComandaException {
         try {
@@ -212,7 +212,7 @@ public class ComandaDAOimp implements ComandaDAO {
         }
     }
 
-    /*Função para excluir Cliente da Tabela*/
+    /**Função para excluir Cliente da Tabela*/
     @Override
     public void excluirCliente(Cliente c) throws ComandaException {
         try {
@@ -229,7 +229,7 @@ public class ComandaDAOimp implements ComandaDAO {
         }
     }    
 
-    /*Função para excluir Produto da Tabela*/
+    /**Função para excluir Produto da Tabela*/
     @Override
     public void excluirProduto(Produto p) throws ComandaException {
         try {
@@ -246,7 +246,7 @@ public class ComandaDAOimp implements ComandaDAO {
         }
     }   
 
-    /*Função retornar Lista de todas Comandas*/
+    /**Função retornar Lista de todas Comandas*/
     @Override
     public List<Comanda> refreshComandas() throws ComandaException {
         List<Comanda> lista = new ArrayList<>();
@@ -272,7 +272,7 @@ public class ComandaDAOimp implements ComandaDAO {
         return lista;
     }
     
-    /*Função retornar Lista de todos Clientes*/
+    /**Função retornar Lista de todos Clientes*/
     @Override
     public List<Cliente> refreshClientes() throws ComandaException {
         List<Cliente> lista = new ArrayList<>();
@@ -296,7 +296,7 @@ public class ComandaDAOimp implements ComandaDAO {
         return lista;
     }    
 
-    /*Função retornar Lista de todos Produtos*/
+    /**Função retornar Lista de todos Produtos*/
     public List<Produto> refreshProdutos() throws ComandaException {
         List<Produto> lista = new ArrayList<>();
         try {
@@ -318,7 +318,7 @@ public class ComandaDAOimp implements ComandaDAO {
         return lista;
     }
 
-    /*Função que procura nome do Cliente e retorna todos nomes verificados*/
+    /**Função que procura nome do Cliente e retorna todos nomes verificados*/
     @Override
     public List<Cliente> pesquisarClienteNome(String nome) throws ComandaException {
         List<Cliente> lista = new ArrayList<>();
@@ -343,7 +343,7 @@ public class ComandaDAOimp implements ComandaDAO {
         return lista;
     }
 
-    /*Função que procura nome do Produto e retorna todos produtos verificados*/
+    /**Função que procura nome do Produto e retorna todos produtos verificados*/
     @Override
     public List<Produto> pesquisarProdutoNome(String nome) throws ComandaException {
         List<Produto> lista = new ArrayList<>();
@@ -368,7 +368,7 @@ public class ComandaDAOimp implements ComandaDAO {
     }
 
 
-    /*Função que retorna Objeto Cliente baseado no ID*/
+    /**Função que retorna Objeto Cliente baseado no ID*/
     @Override
     public Cliente getClienteById(int id) throws ComandaException {
         try {
@@ -394,7 +394,7 @@ public class ComandaDAOimp implements ComandaDAO {
         
     }
 
-    /*IF EXISTS (SELECT 1 FROM comanda_produto WHERE produtoId = 1 AND comandaId = 15)
+    /**IF EXISTS (SELECT 1 FROM comanda_produto WHERE produtoId = 1 AND comandaId = 15)
 BEGIN
     UPDATE comanda_produto
     SET qtd = 0
@@ -406,7 +406,7 @@ BEGIN
     VALUES (1, 15, 1);
 END */
 
-    /*Função que add um produto a comanda, em uma tabela associativa comanda_produto */
+    /**Função que add um produto a comanda, em uma tabela associativa comanda_produto */
     @Override
     public void addProdutoComanda(int idComanda, int idProduto, int qtd) throws ComandaException {
         try {
@@ -437,7 +437,7 @@ END */
         }
     }
 
-    /*Retorna um Produto apartir do ID*/
+    /**Retorna um Produto apartir do ID*/
     @Override
     public Produto getProdutoById(int id) throws ComandaException {
         try {
@@ -466,7 +466,7 @@ END */
         }
     }
 
-    /* Retorna o Produto de uma comando apartir de um ID*/
+    /** Retorna o Produto de uma comando apartir de um ID*/
     @Override
     public List<ProdutoComanda> getProdutoComandaByIdComanda(int idComanda) throws ComandaException {
         try {
@@ -501,7 +501,7 @@ END */
         }
     }
 
-    /* Retorna o valor total das comandas*/
+    /** Retorna o valor total das comandas*/
     @Override 
     public double getValorTotalComanda(int idComanda) throws ComandaException {
         try {
@@ -529,7 +529,7 @@ END */
         }
     }
 
-    /*Retorna o valor total dos produtos, apartir da quantidade */
+    /**Retorna o valor total dos produtos, apartir da quantidade */
     @Override
     public double getValorTotalProduto(int idComanda, int idProduto) throws ComandaException {
         try {
@@ -558,7 +558,7 @@ END */
         }
     }
 
-    /* Retorna o total de comandas abertas*/
+    /** Retorna o total de comandas abertas*/
     @Override
     public int contarComandasAbertas() throws ComandaException {
         try {
@@ -579,7 +579,7 @@ END */
         }
     }
 
-    /* Função para remover um produto de uma comanda*/
+    /** Função para remover um produto de uma comanda*/
     @Override
     public void removeProdutoComanda(int idComanda, int idProduto) throws ComandaException {
         try {
@@ -601,7 +601,7 @@ END */
         }
     }
 
-    /* Função para retornar o Total em VALOR de todas comandas*/
+    /** Função para retornar o Total em VALOR de todas comandas*/
     @Override 
     public double getTotalComandas() throws ComandaException {
         try {
@@ -626,7 +626,7 @@ END */
         }
     }
 
-    /*Retorna se a comanda esta vazia*/
+    /**Retorna se a comanda esta vazia*/
     @Override
     public boolean getComandaVazia(int idComanda) throws ComandaException {
         try {
@@ -646,7 +646,7 @@ END */
             throw new ComandaException(e);
         }
     }
-    /*Retorna se o Produto esta em uso em alguma comanda*/
+    /**Retorna se o Produto esta em uso em alguma comanda*/
     @Override 
     public boolean produtoNaoUsado(int idProduto) throws ComandaException {
         try {
@@ -667,7 +667,7 @@ END */
         }
     } 
 
-    /* Retorna cliente que não fez nenhum pedido ou seja comanda zerada*/
+    /** Retorna cliente que não fez nenhum pedido ou seja comanda zerada*/
     @Override
     public boolean clienteInativo(int clienteId) throws ComandaException {
         try {
