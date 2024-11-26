@@ -4,7 +4,7 @@ import model.*;
 import java.util.List;
 
 public interface ComandaDAO {
-    //////////// Operacoes - Cliente ////////////
+    /* Operacoes - Cliente */
     List<Cliente> pesquisarClienteNome(String nome) throws ComandaException;
     void inserirCliente(Cliente c) throws ComandaException;
     Object[] getNomeByCpf(String cpf) throws ComandaException;
@@ -16,14 +16,14 @@ public interface ComandaDAO {
     List<Cliente> refreshClientes() throws ComandaException;
 
 
-    //////////// Operacoes - Comanda ////////////
+    /* Operacoes - Comanda */
     void excluirComanda(Comanda c) throws ComandaException;
     void inserirComanda(Comanda c) throws ComandaException;
     List<Comanda> refreshComandas() throws ComandaException;
     int contarComandasAbertas() throws ComandaException;
 
 
-    //////////// Operacoes - Produto ////////////
+    /* Operacoes - Produto */
     void inserirProduto(Produto p) throws ComandaException;
     void atualizarProduto(Produto p) throws ComandaException;
     void excluirProduto(Produto p) throws ComandaException;
@@ -32,7 +32,7 @@ public interface ComandaDAO {
     Produto getProdutoById(int id) throws ComandaException;
 
 
-    //////////// Operacoes - Produto_Comanda ////////////
+    /* Operacoes - Produto_Comanda */
     List<ProdutoComanda> getProdutoComandaByIdComanda(int idComanda) throws ComandaException;
     void removeProdutoComanda(int idComanda, int idProduto) throws ComandaException;
     void addProdutoComanda(int idComanda, int idProduto, int qtd) throws ComandaException;
@@ -41,10 +41,4 @@ public interface ComandaDAO {
     double getTotalComandas() throws ComandaException;
     boolean getComandaVazia(int idComanda) throws ComandaException;
     boolean produtoNaoUsado(int idProduto) throws ComandaException;
-
-
-
-
-    //GetBy valor
-
 }

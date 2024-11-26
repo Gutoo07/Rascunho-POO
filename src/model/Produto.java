@@ -1,5 +1,5 @@
 package model;
-
+/*Entidade Produto, correspondente a tabela Produto no DB*/
 public class Produto {
     private int id;
     private double valor = 0.0;

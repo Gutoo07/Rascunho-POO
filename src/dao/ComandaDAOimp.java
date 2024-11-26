@@ -9,15 +9,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.naming.spi.DirStateFactory.Result;
-
-
 public class ComandaDAOimp implements ComandaDAO {
 
     String hostName = "localhost"; 
-    String dbName = ""; 
-    String user = ""; //trocar pro seu user do sql
-    String senha = ""; //trocar pela sua senha do sql
+    String dbName = "trabalhobd";
+    String user = "guto"; //trocar pro seu user do sql
+    String senha = "guto"; //trocar pela sua senha do sql
 
     private Connection con = null;
 
@@ -26,7 +23,7 @@ public class ComandaDAOimp implements ComandaDAO {
         try { 
             Class.forName("net.sourceforge.jtds.jdbc.Driver");
             con = DriverManager.getConnection(String.format(
-                "jdbc:jtds:sqlserver://%s:1433;databaseName=%s;user=%s;password=%s;", hostName, dbName, user, senha
+                "jdbc:jtds:sqlserver://%s:57480;databaseName=%s;user=%s;password=%s;", hostName, dbName, user, senha
             )); //SQLServer
         } catch (ClassNotFoundException | SQLException e) { 
             e.printStackTrace();
@@ -387,26 +384,12 @@ public class ComandaDAOimp implements ComandaDAO {
             }
             return null;       
         } catch (SQLException e) {
-            System.out.println("Erro sql");
+            System.out.println("Nenhum Cliente encontrado com o ID "+id);
             //e.printStackTrace();
             throw new ComandaException(e);
         }
         
     }
-
-    /*IF EXISTS (SELECT 1 FROM comanda_produto WHERE produtoId = 1 AND comandaId = 15)
-BEGIN
-    UPDATE comanda_produto
-    SET qtd = 0
-    WHERE produtoId = 1 AND comandaId = 15;
-END
-ELSE
-BEGIN
-    INSERT INTO comanda_produto (produtoId, comandaId, qtd)
-    VALUES (1, 15, 1);
-END */
-
-    /*Função que add um produto a comanda, em uma tabela associativa comanda_produto */
     @Override
     public void addProdutoComanda(int idComanda, int idProduto, int qtd) throws ComandaException {
         try {

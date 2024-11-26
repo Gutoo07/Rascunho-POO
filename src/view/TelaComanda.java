@@ -21,6 +21,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -38,12 +39,13 @@ public class TelaComanda {
     private ComandaDAO comandaDAO;
 
     public TelaComanda() throws ComandaException {
-        Header header = new Header();
         comandaDAO = new ComandaDAOimp();
+        Header header = new Header();
         VBox vbox = new VBox();
         GridPane grid = new GridPane();
         grid.setHgap(50);
         grid.setVgap(10);
+        tabelaComanda.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         Label nomeLabel = new Label("Nome: " + Main.persistenceCliente.getNome());
         Label telefoneLabel = new Label("Telefone: " + Main.persistenceCliente.getTelefone());
@@ -51,18 +53,20 @@ public class TelaComanda {
     
         gerarBindings();
 
-        //Produtos
+        /*Colunas da tabela de produtos disponiveis para consumo*/
         TableView<Produto> tabelaProdutos = new TableView<>();
+        tabelaProdutos.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         TableColumn<Produto, String> nomeProdutoCol = new TableColumn<>("Nome");
         nomeProdutoCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNome()));
-
         TableColumn<Produto, Double> valorProdutoCol = new TableColumn<>("Valor Uni.");
+        valorProdutoCol.prefWidthProperty().bind(tabelaProdutos.widthProperty().multiply(0.09));
+        valorProdutoCol.setStyle( "-fx-alignment: CENTER;");
         valorProdutoCol.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getValor()).asObject());
-
-        TableColumn<Produto, Void> addProdutoCol = new TableColumn<>("Adicionar");
+        TableColumn<Produto, Void> addProdutoCol = new TableColumn<>("+");
+        addProdutoCol.prefWidthProperty().bind(tabelaProdutos.widthProperty().multiply(0.06));
+        addProdutoCol.setStyle( "-fx-alignment: CENTER;");
         addProdutoCol.setCellFactory(col -> new TableCell<Produto, Void>() {
-            private final Button addButton = new Button("Adicionar");
-
+            private final Button addButton = new Button("+");
             @Override
             public void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
@@ -77,7 +81,6 @@ public class TelaComanda {
                             try {
                                 atualizarTabelaComanda();
                             } catch (ComandaException e1) {
-                                // TODO Auto-generated catch block
                                 e1.printStackTrace();
                             } 
                         }
@@ -89,21 +92,22 @@ public class TelaComanda {
         tabelaProdutos.getColumns().addAll(nomeProdutoCol, valorProdutoCol, addProdutoCol);
 
         produtoControllerDisponiveis.refresh();
-        // tabelaProdutos.getItems().addAll(produtoControllerDisponiveis.getLista());
         tabelaProdutos.setItems(produtoControllerDisponiveis.getLista());
 
-
-        //Produtos da Comanda
+        /*Colunas da tabela de produtos consumidos pela comanda respectiva*/
         TableColumn<Produto, String> nomeComandaCol = new TableColumn<>("Nome");
         nomeComandaCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNome()));
-
         TableColumn<Produto, Integer> qtdComandaCol = new TableColumn<>("Qtd");
+        qtdComandaCol.setStyle( "-fx-alignment: CENTER;");
+        qtdComandaCol.prefWidthProperty().bind(tabelaProdutos.widthProperty().multiply(0.06));
         qtdComandaCol.setCellValueFactory(cellData -> new SimpleIntegerProperty(produtoController.get(cellData.getValue().getId())).asObject());
-
         TableColumn<Produto, Double> valorComandaCol = new TableColumn<>("Valor Uni.");
+        valorComandaCol.setStyle( "-fx-alignment: CENTER;");
+        valorComandaCol.prefWidthProperty().bind(tabelaProdutos.widthProperty().multiply(0.09));
         valorComandaCol.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getValor()).asObject());
-
         TableColumn<Produto, Double> valorTotalProduto = new TableColumn<>("Valor Total");
+        valorTotalProduto.setStyle( "-fx-alignment: CENTER;");
+        valorTotalProduto.prefWidthProperty().bind(tabelaProdutos.widthProperty().multiply(0.09));
         valorTotalProduto.setCellValueFactory(cellData -> {
             try {
                 return new SimpleDoubleProperty(produtoController.getValorTotalProduto(Main.persistenceComanda.getId(), cellData.getValue().getId())).asObject();
@@ -112,11 +116,11 @@ public class TelaComanda {
             }
             return null;
         });
-
         TableColumn<Produto, Void> lessProdutoCol = new TableColumn<>("");
+        lessProdutoCol.setStyle( "-fx-alignment: CENTER;");
+        lessProdutoCol.prefWidthProperty().bind(tabelaProdutos.widthProperty().multiply(0.05));
         lessProdutoCol.setCellFactory(col -> new TableCell<Produto, Void>() {
             private final Button addButton = new Button("-");
-
             @Override
             public void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
@@ -131,7 +135,6 @@ public class TelaComanda {
                             try {
                                 atualizarTabelaComanda();
                             } catch (ComandaException e1) {
-                                // TODO Auto-generated catch block
                                 e1.printStackTrace();
                             } 
                         }
@@ -139,11 +142,11 @@ public class TelaComanda {
                 }
             }
         });
-
         TableColumn<Produto, Void> deleteProdutoCol = new TableColumn<>("");
+        deleteProdutoCol.setStyle( "-fx-alignment: CENTER;");
+        deleteProdutoCol.prefWidthProperty().bind(tabelaProdutos.widthProperty().multiply(0.05));
         deleteProdutoCol.setCellFactory(col -> new TableCell<Produto, Void>() {
             private final Button addButton = new Button("X");
-
             @Override
             public void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
@@ -158,7 +161,6 @@ public class TelaComanda {
                             try {
                                 atualizarTabelaComanda();
                             } catch (ComandaException e1) {
-                                // TODO Auto-generated catch block
                                 e1.printStackTrace();
                             } 
                         }
@@ -169,14 +171,11 @@ public class TelaComanda {
 
         tabelaComanda.getColumns().addAll(nomeComandaCol,valorComandaCol, qtdComandaCol, valorTotalProduto, lessProdutoCol, deleteProdutoCol);
 
-
-        //Pagamento
-        VBox painelDireita = new VBox(10);
-        painelDireita.setPadding(new javafx.geometry.Insets(10));
+        /*Funcao de Pagamento, no caso meramente ilustrativa e apenas fecha a comanda em questao*/
 
         valorTotalLabel = new Label("Valor Total: R$ "+ comandaDAO.getValorTotalComanda(Main.persistenceComanda.getId())); 
+        /*Botao de Pagar e sua funcao*/
         Button pagarButton = new Button("Pagar");
-
         pagarButton.setOnAction(e -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Aguardando pagamento");
@@ -196,11 +195,12 @@ public class TelaComanda {
                 alert.setContentText("O pagamento da Comanda foi finalizado!");
                 alert.initModality(Modality.APPLICATION_MODAL);
                 alert.showAndWait();
-            } catch (ComandaException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
+            } catch (ComandaException erro) {
+                erro.printStackTrace();
             }
         });
+        /*Funcao de pesquisa dinamica, retornando os produtos correspondentes
+        ao texto digitado na tabela de produtos*/
         txtPesquisarProduto.setOnKeyTyped(e -> {
             try {
                 produtoControllerDisponiveis.pesquisarProdutoNome();
@@ -209,42 +209,41 @@ public class TelaComanda {
                 erro.printStackTrace();
             }
         });
-        painelDireita.getChildren().addAll(valorTotalLabel, pagarButton);
 
-        //config
+        /*Adicionando os elementos ao gridpane
+        com dados do cliente e textfield de pesquisa de produtos*/
         grid.add(header, 0, 0, 1, 1);
         grid.add(nomeLabel, 0, 0);
         grid.add(telefoneLabel, 0, 1);
         grid.add(cpfLabel, 0, 2);
-        // grid.add(new Label("Produtos Disponíveis"), 0, 3);
         grid.add(new Label("Adicionar / Pesquisar Produtos"), 0, 3);
         grid.add(txtPesquisarProduto, 0, 4);
-        grid.add(new Label("Comanda "+Main.persistenceComanda.getId()), 2, 4);
+        grid.add(new Label("Comanda "+Main.persistenceComanda.getId()), 3, 0);
+        grid.add(valorTotalLabel, 3 ,1);
+        grid.add(pagarButton, 3, 2);
 
-        BorderPane borderpane = new BorderPane();
-        // grid.add(tabelaProdutos, 0, 5, 3, 1);
-        borderpane.setLeft(tabelaProdutos);
-        // grid.add(tabelaComanda, 5, 4, 3, 1);
-        borderpane.setCenter(tabelaComanda);
-        grid.add(painelDireita, 2, 0, 1, 5);  // Adiciona a área à direita
-        // borderpane.setRight(painelDireita);
-
-        vbox.getChildren().addAll(header, grid, borderpane);
+        /*GridPane principal com as duas tabelas*/
+        GridPane grid2 = new GridPane();
+        ColumnConstraints col0 = new ColumnConstraints();
+        col0.setPercentWidth(40.0);
+        ColumnConstraints col1 = new ColumnConstraints();
+        col1.setPercentWidth(60.0);
+        grid2.getColumnConstraints().addAll(col0, col1);
+        grid2.add(tabelaProdutos, 0, 0);
+        grid2.add(tabelaComanda, 1, 0);
+        vbox.getChildren().addAll(header, grid, grid2);
         Scene scene = new Scene(vbox, Main.W, Main.H);
         Main.mapScene.put("COMANDA", scene);
 
         atualizarTabelaComanda();
     }
-
+    /*Atualiza a lista de produtos consumidos da comanda*/
     private void atualizarTabelaComanda() throws ComandaException {
         List<ProdutoComanda> lista = comandaDAO.getProdutoComandaByIdComanda(Main.persistenceComanda.getId());
         tabelaComanda.getItems().clear();
-        // Double valorTotal = 0.0;
         for(ProdutoComanda produtoComanda : lista){
             produtoController.set(produtoComanda.getIdProduto(), produtoComanda.getQtd());
-            // valorTotal += produto.getValor() * produtoComanda.getQtd();
         }
-        // valorTotalLabel.setText("Valor Total: R$ "+ valorTotal);
         valorTotalLabel.setText("Valor Total: R$ "+ comandaDAO.getValorTotalComanda(Main.persistenceComanda.getId()));
         
         produtoController.getMap().forEach((id, qtd) -> {
@@ -257,7 +256,6 @@ public class TelaComanda {
             } catch (ComandaException e) {
                 e.printStackTrace();
             }
- 
         });
     }
     public void gerarBindings() {

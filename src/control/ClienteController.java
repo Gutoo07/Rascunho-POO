@@ -31,7 +31,9 @@ public class ClienteController {
         cpf.set("");
         comandaDAO = new ComandaDAOimp();
     }
-
+    /*Adiciona cliente, e confere se o ID a ser inserido ja existe no BD
+    Oferece a opcao de sobrescrever os dados
+    Permite a sobrescrita dos dados mesmo se o Cliente possuir Comanda(s) abertas*/
     public void adicionar() throws ComandaException {
         int clienteId = this.id.get();
         Cliente c = new Cliente(clienteId);
@@ -50,11 +52,11 @@ public class ClienteController {
         }
         refresh();
     }
+    /*Usa o BD para atualizar a lista de Clientes*/
     public void refresh() throws ComandaException {
         lista.clear();
         lista.addAll(comandaDAO.refreshClientes());
     }
-
     public boolean cpfExist(String value){
         if(value == null){
             return false;
@@ -67,7 +69,7 @@ public class ClienteController {
         }
         return false;
     }
-
+    /*Exclui Cliente, mas nao permite a exclusao se ele possuir Comanda(s) aberta*/
     public void excluir(Cliente c) throws ComandaException {
         if (comandaDAO.clienteInativo(c.getId())) {
             comandaDAO.excluirCliente(c);

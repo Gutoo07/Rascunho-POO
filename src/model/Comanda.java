@@ -1,9 +1,8 @@
 package model;
-
+/*Entidade Comanda, correspondente a tabela Comanda no BD*/
 public class Comanda {
     private int id;
     private String nome;
-    // private double valorTotal = 0.0;
     private double valorPago = 0.0;
     private int clienteId;
 

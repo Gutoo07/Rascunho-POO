@@ -1,5 +1,5 @@
 package model;
-
+/*Entidade Ciente, correspondente a tabela Cliente no BD*/
 public class Cliente {
     private int id;
     private String nome = "";
