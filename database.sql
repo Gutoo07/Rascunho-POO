@@ -1,27 +1,12 @@
 --use master
 --drop database trabalhobd
+
 --drop table comanda
 --drop table comanda_produto
 --drop table cliente
 --drop table produto
 
-SELECT *
-FROM [dbo].[cliente]
-
-SELECT *
-FROM [dbo].comanda
-
-SELECT *
-FROM [dbo].comanda_produto
-
-SELECT *
-FROM [dbo].produto
-
-
-
-
-
---------------------------------------
+--------------------------------------------------------------------
 CREATE DATABASE trabalhobd
 GO
 --------------------------------------------------------------------
@@ -31,13 +16,12 @@ CREATE TABLE cliente(
 	id			int,
 	nome		varchar(100),
 	telefone	char(11),
-	cpf			char(11)	null
+	cpf			char(11)
 	PRIMARY KEY (id)
 )
 GO
 CREATE TABLE comanda(
 	id			int,
-	valorTotal	decimal(7,2)	default(0.0),
 	valorPago	decimal(7,2)	default(0.0),
 	clienteId	int				null
 	PRIMARY KEY (id)
@@ -59,7 +43,17 @@ CREATE TABLE comanda_produto(
 	FOREIGN KEY (produtoId) REFERENCES produto(id),
 	FOREIGN KEY (comandaID) REFERENCES comanda(id)
 )
-
+GO
+CREATE TABLE pagamento (
+    id UNIQUEIDENTIFIER DEFAULT NEWID(), 
+    dataPagamento DATE DEFAULT GETDATE(), 
+    valor DECIMAL(10, 2),                
+    clienteId INT,                
+    PRIMARY KEY (id),
+    FOREIGN KEY (clienteId) REFERENCES cliente(id)
+);
+GO
+--------------------------------------------------------------------
 --Valor Total da Comanda
 SELECT co.id as comanda, SUM(cop.qtd * p.valor) AS valor_total
 FROM comanda co
@@ -105,14 +99,15 @@ SELECT p.id
 FROM produto p
 LEFT OUTER JOIN comanda_produto cop
 ON p.id = cop.produtoId
-WHERE cop.produtoId IS NULL AND p.id = 6
+WHERE cop.produtoId IS NULL -- AND p.id = 6
 
---Pesquisar quantas unidades de um produto foram consumidas atraves de todas as comandas
+--Pesquisar quantas unidades de um produto foram
+-- consumidas atraves de todas as comandas
 SELECT COUNT(p.id) as qtd
 FROM produto p
 INNER JOIN comanda_produto cop
 ON p.id = cop.produtoId
-WHERE p.id = 4
+-- WHERE p.id = 4
 GROUP BY p.id, p.nome, p.valor
 ORDER BY p.id
 
@@ -123,14 +118,8 @@ LEFT OUTER JOIN comanda co
 ON c.id = co.clienteId
 WHERE co.clienteId IS NULL
 
-
-select 0 as zero
-
+--------------------------------------------------------------------
 select * from comanda
 select * from comanda_produto
 select * from cliente
 select * from produto
-
-
-
-delete from cliente

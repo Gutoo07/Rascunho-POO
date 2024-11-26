@@ -5,17 +5,12 @@ import dao.ComandaException;
 import control.HomeController;
 import  control.ClienteController;
 import model.Comanda;
-import model.Produto;
-import view.Main;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
@@ -47,40 +42,35 @@ public class Home{
             comandasAbertas = new Label("Comandas Abertas: "+control.contarComandasAbertas());
             totalComandas = new Label("Total de Todas as Comandas: "+ control.getTotalComandas());
             atualizarHome();
-            // control.refresh();
         } catch (ComandaException e) {
             alert(AlertType.ERROR, "Erro ao inicializar control: ComandaController");
         }
-
         Header header = new Header();
         VBox layout = new VBox();
-        
-        // Label label = new Label("TELA INICIO"); tirei fora
-        // layout.getChildren().addAll(header,label); movido pra baixo apenas
         Scene scene = new Scene(layout, Main.W, Main.H);
 
-        //Gridpane com o TextField (input) de numero de comanda
+        /*Gridpane com o TextField (input) de numero de comanda*/
         GridPane inputComanda = new GridPane();
         inputComanda.setHgap(10);
         inputComanda.setVgap(15);
-
+        comandas.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        /*Botao Criar Comanda e sua funcao*/
         Button btnAdd = new Button("Criar Comanda");
         btnAdd.setOnAction( e -> {
          try {
             ClienteController cliente = new ClienteController();
             cliente.refresh();
             if(!cliente.cpfExist(txtCpfCliente.getText())){
-                alert(AlertType.ERROR, "Cliente não existe!");
+                alert(AlertType.ERROR, "Insira um CPF de Cliente valido.");
             }else{
                 control.adicionar();
                 atualizarHome();
-                // comandas.refresh();
             }
          } catch (ComandaException erro) {
              alert(AlertType.ERROR, "Erro ao adicionar/abrir comanda");
          }
         });
-
+        /*Adicionando os elementos no GridPane*/
         inputComanda.add(new Label("Gerenciador de Comandas"),0,0);
         inputComanda.add(new Label("Numero de Comanda"), 0, 1);
         inputComanda.add(new Label("CPF do Cliente"), 0, 2);
@@ -90,7 +80,7 @@ public class Home{
         inputComanda.add(comandasAbertas, 3, 0);
         inputComanda.add(totalComandas, 3, 1);
 
-        //Borderpane principal contendo o Gridpane e a TableView de comandas
+        /*Borderpane principal contendo o Gridpane e a TableView de comandas*/
         BorderPane paneGeral = new BorderPane();
         paneGeral.setTop(inputComanda);
         paneGeral.setCenter(comandas);
@@ -101,14 +91,15 @@ public class Home{
         layout.getChildren().addAll(header, paneGeral);
         Main.mapScene.put("INICIO", scene);
     }
+    /*Gera as colunas e as adiciona na tabela de Comandas*/
     public void gerarColunas() {
-
         TableColumn<Comanda, String> col = new TableColumn<>("Nome");
+        // col.prefWidthProperty().bind(comandas.widthProperty().multiply(0.22));
         col.setCellValueFactory(new PropertyValueFactory<Comanda, String>("nome"));
-
         TableColumn<Comanda, Integer> col1 = new TableColumn<>("Comanda");
+        col1.setStyle( "-fx-alignment: CENTER;");
+        col1.prefWidthProperty().bind(comandas.widthProperty().multiply(0.05));
         col1.setCellValueFactory(new PropertyValueFactory<Comanda, Integer>("id"));
-
         Callback<TableColumn<Comanda, Void>, TableCell<Comanda, Void>> callback = 
             new Callback<>() {
                 @Override
@@ -140,12 +131,14 @@ public class Home{
                 }
         };
         TableColumn<Comanda, Void> excluirComandaCol = new TableColumn<>("");
+        excluirComandaCol.setStyle( "-fx-alignment: CENTER;");
+        excluirComandaCol.prefWidthProperty().bind(comandas.widthProperty().multiply(0.05));
         excluirComandaCol.setCellFactory(callback);  
-
         TableColumn<Comanda, Void> abrirComandaCol = new TableColumn<>("");
+        abrirComandaCol.setStyle( "-fx-alignment: CENTER;");
+        abrirComandaCol.prefWidthProperty().bind(comandas.widthProperty().multiply(0.05));
         abrirComandaCol.setCellFactory(comandaCol -> new TableCell<Comanda, Void>() {
             private final Button addButton = new Button("Abrir");
-
             @Override
             public void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
@@ -163,7 +156,6 @@ public class Home{
                             Scene scene = Main.mapScene.get("COMANDA");
                             Main.changeTela(scene);
                         } catch (ComandaException e1) {
-                            // TODO Auto-generated catch block
                             e1.printStackTrace();
                         }
 
@@ -171,8 +163,9 @@ public class Home{
                 }
             }
         });
-
         TableColumn<Comanda, String> colVazia = new TableColumn<>("");
+        colVazia.prefWidthProperty().bind(comandas.widthProperty().multiply(0.07));
+        colVazia.setStyle( "-fx-alignment: CENTER;");
         colVazia.setCellValueFactory(cellData -> {
             try {
                 return new SimpleStringProperty(control.getComandaVazia(cellData.getValue().getId()));
@@ -182,9 +175,10 @@ public class Home{
             return null;
         });
 
-        comandas.getColumns().addAll(col,col1, abrirComandaCol, excluirComandaCol, colVazia);
+        comandas.getColumns().addAll(col1, col, abrirComandaCol, excluirComandaCol, colVazia);
         comandas.setItems(control.getLista());
 
+        /*Funcao que coloca no TextField os dados da comanda que for clicada na tabela*/
         comandas.getSelectionModel().selectedItemProperty().addListener((obs, antigo, novo) -> {
             control.entityToBoundary(novo);
         });
@@ -193,12 +187,14 @@ public class Home{
         Bindings.bindBidirectional(txtIdComanda.textProperty(), control.idProperty(), (StringConverter) new IntegerStringConverter());
         Bindings.bindBidirectional(txtCpfCliente.textProperty(), control.nomeProperty());       
     }    
+    /*Funcao para facilitar o lancamento de pop-ups*/
     public static void alert(AlertType tipo, String texto) {
         Alert alerta = new Alert(tipo);
         alerta.setHeaderText("Aviso");
         alerta.setContentText(texto);
         alerta.showAndWait();
     }
+    /*Atualiza a lista de comandas com uma funcao no sql, atualiza a lista de comandas da tabela e atualiza os dados das labels*/
     public void atualizarHome() throws ComandaException {
         control.refresh();
         comandas.refresh();

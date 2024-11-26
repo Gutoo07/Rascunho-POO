@@ -1,10 +1,9 @@
 package model;
-
+/*Entidade ProdutoComanda, correspondente a tabela Produto_Comanda no BD*/
 public class ProdutoComanda {
     private int idComanda;
     private int idProduto;
     private int qtd;
-
 
     public ProdutoComanda() {
     }

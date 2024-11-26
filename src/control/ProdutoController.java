@@ -31,7 +31,9 @@ public class ProdutoController {
         valor.set(0.0);
         comandaDAO = new ComandaDAOimp();
     }
-
+    /*Funcao de adicionar, que confere no BD se o ID a ser adicionado ja existe ou nao.
+    Oferece a opcao de sobrescrever ou nao os dados.
+    Nao permite a sobrescrita dos dados se o Produto em questao estiver sendo usado em alguma comanda.*/
     public void adicionar() throws ComandaException {
         int produtoId = this.id.get();
         Produto p = new Produto(produtoId);
@@ -55,10 +57,12 @@ public class ProdutoController {
             refresh();
         }
     }
+    /*Atualiza a lista de Produtos com a funcao do BD*/
     public void refresh() throws ComandaException {
         lista.clear();
         lista.addAll(comandaDAO.refreshProdutos());
     }
+    /*Excluir produto, mas nao permite a exclusao se estiver sendo usado em alguma comanda.*/
     public void excluir(Produto p) throws ComandaException {
         if (comandaDAO.produtoNaoUsado(p.getId())) {
             comandaDAO.excluirProduto(p);
@@ -67,6 +71,7 @@ public class ProdutoController {
             alert(AlertType.INFORMATION, "Este produto esta sendo usado por alguma comanda.").show();
         }
     }
+    /*Coloca os dados do produto correspondente na tela*/
     public void entityToBoundary(Produto p) {
         if (p != null) {
             this.id.set(p.getId());

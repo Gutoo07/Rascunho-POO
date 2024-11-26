@@ -9,15 +9,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.naming.spi.DirStateFactory.Result;
-
-
 public class ComandaDAOimp implements ComandaDAO {
 
     String hostName = "localhost"; 
-    String dbName = ""; 
-    String user = ""; //trocar pro seu user do sql
-    String senha = ""; //trocar pela sua senha do sql
+    String dbName = "sistemacomanda";
+    String user = "sa"; //trocar pro seu user do sql
+    String senha = "458777jK"; //trocar pela sua senha do sql
 
     private Connection con = null;
 
@@ -387,7 +384,7 @@ public class ComandaDAOimp implements ComandaDAO {
             }
             return null;       
         } catch (SQLException e) {
-            System.out.println("Erro sql");
+            System.out.println("Nenhum Cliente encontrado com o ID "+id);
             //e.printStackTrace();
             throw new ComandaException(e);
         }
@@ -687,4 +684,24 @@ END */
             throw new ComandaException(e);
         }
     }
+
+    @Override
+    public void realizarPagamento(Pagamento pagamento) throws ComandaException {
+        try {
+            String SQL = """
+                    INSERT INTO pagamento (valor, clienteId)
+                    VALUES (?, ?)
+                    """;
+            
+            PreparedStatement stm = con.prepareStatement(SQL);
+            stm.setDouble(1, pagamento.getValor());
+            stm.setInt(2, pagamento.getClienteId());
+            
+            int i = stm.executeUpdate();
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

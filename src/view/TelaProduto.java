@@ -18,7 +18,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
-import javafx.util.StringConverter;
 import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 
@@ -42,10 +41,12 @@ public class TelaProduto {
         VBox layout = new VBox();
         Scene scene = new Scene(layout, Main.W, Main.H);
 
-        //Gridpane com TextField de ID, Nome e Valor de Produto
+        /* Gridpane com TextField de ID, Nome e Valor de Produto*/
         GridPane inputProduto = new GridPane();
         inputProduto.setHgap(10);
         inputProduto.setVgap(10);
+        produtos.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        /* Botao de Adicionar Produto e sua funcao*/
         Button btnAdd = new Button("Adicionar");
         btnAdd.setOnAction(e -> {
             if (this.txtIdProduto.getText().equals("")
@@ -62,7 +63,7 @@ public class TelaProduto {
                     }
                 }
         });
-
+        /*Botao para limpar os campos de input */
         Button btnLimpar = new Button("Limpar Campos");
         btnLimpar.setOnAction(e -> {
             try {
@@ -83,7 +84,7 @@ public class TelaProduto {
         inputProduto.add(btnAdd, 1, 4);
         inputProduto.add(btnLimpar, 2, 4);
 
-        //Borderpane Principal
+        /*Borderpane Principal com o GridPane e a tabela de produtos */
         BorderPane paneGeral = new BorderPane();
         paneGeral.setTop(inputProduto);
         paneGeral.setCenter(produtos);
@@ -91,6 +92,7 @@ public class TelaProduto {
         gerarColunas();
         gerarBindings();
 
+        /*Funcao de pesquisa dinamica, retornando os produtos correspondentes ao texto digitado no campo Nome e exibindo na tabela */
         txtNomeProduto.setOnKeyTyped( e -> {
             try {
                 control.pesquisarProdutoNome();
@@ -103,18 +105,25 @@ public class TelaProduto {
         layout.getChildren().addAll(header, paneGeral);
         Main.mapScene.put("PRODUTOS", scene);
     }
+    /*Mesma funcao para facilitar o lancamento de pop-ups*/
     public void alert(AlertType tipo, String texto) {
         Alert alerta = new Alert(tipo);
         alerta.setHeaderText("Aviso");
         alerta.setContentText(texto);
         alerta.showAndWait();
     }
+    /*Gera as colunas e as adiciona na tabela de produtos*/
     public void gerarColunas() {
         TableColumn<Produto, Integer> col1 = new TableColumn<>("ID");
+        col1.prefWidthProperty().bind(produtos.widthProperty().multiply(0.05));
+        col1.setStyle( "-fx-alignment: CENTER;");
         col1.setCellValueFactory(new PropertyValueFactory<Produto, Integer>("id"));
         TableColumn<Produto, String> col2 = new TableColumn<>("Nome");
+        col2.prefWidthProperty().bind(produtos.widthProperty().multiply(0.22));
         col2.setCellValueFactory(new PropertyValueFactory<Produto, String>("nome"));
         TableColumn<Produto, Double> col3 = new TableColumn<>("Valor");
+        col3.prefWidthProperty().bind(produtos.widthProperty().multiply(0.05));
+        col3.setStyle( "-fx-alignment: CENTER;");
         col3.setCellValueFactory(new PropertyValueFactory<Produto, Double>("valor"));
 
         Callback<TableColumn<Produto, Void>, TableCell<Produto, Void>> callback =
@@ -147,11 +156,13 @@ public class TelaProduto {
                 }
             };
          TableColumn<Produto, Void> col4 = new TableColumn<>("Acoes");
+         col4.prefWidthProperty().bind(produtos.widthProperty().multiply(0.05));
+         col4.setStyle( "-fx-alignment: CENTER;");
          col4.setCellFactory(callback);
          
          produtos.getColumns().addAll(col1, col2, col3, col4);
          produtos.setItems(control.getLista());
-
+        /*Funcao que coloca nos textfields os dados do produto que for clicado na tabela*/
          produtos.getSelectionModel().selectedItemProperty().addListener((obs, antigo, novo) -> {
             control.entityToBoundary(novo);
          });

@@ -12,8 +12,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
 public class HomeController {
@@ -25,7 +23,8 @@ public class HomeController {
     public HomeController() throws ComandaException {
         comandaDAO = new ComandaDAOimp();
     }
-
+    /* Insere novo registro de Comanda no BD, 
+        mas antes confere se o ID da comanda ja existe na lista */
     public void adicionar() throws ComandaException {
         int comandaId = this.id.get();
         String cpf = this.cpf.get();
@@ -33,7 +32,6 @@ public class HomeController {
 
         for (Comanda aux : lista) {
             if ( aux.getId() == comandaId ) {
-                //comanda ativa
                 Home.alert(AlertType.ERROR, "Uma comanda com esse ID já existe!");
                 return;
             }
@@ -44,6 +42,8 @@ public class HomeController {
         lista.add(c);
         comandaDAO.inserirComanda(c);
     }
+    /* Exclui o registro da Comanda do BD,
+     mas somente se seu valor pago for equivalente ao total da comanda */
     public void excluir(Comanda c) throws ComandaException {
         if (c.getValorPago() >= comandaDAO.getValorTotalComanda(c.getId())) {
             lista.remove(c);
@@ -54,11 +54,9 @@ public class HomeController {
         lista.clear();
         lista.addAll(comandaDAO.refreshComandas());
     }
-
     public void limpar() {
         this.id.set(0);
     }
-
     public void entityToBoundary(Comanda c) {
         if (c != null) {
             this.id.set(c.getId());
@@ -68,7 +66,6 @@ public class HomeController {
                 this.cpf.set(cliente.getCpf());
             }
              catch (ComandaException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 
@@ -86,14 +83,12 @@ public class HomeController {
         }
         return "";
     }
-    
     public ObservableList<Comanda> getLista() {
         return this.lista;
     }
     public IntegerProperty idProperty() {
         return this.id;
     }
-
     public StringProperty nomeProperty() {
         return this.cpf;
     }
